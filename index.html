@@ -75,14 +75,36 @@ header.site.is-ink::before{opacity:0}
 .panel>a.cover{position:absolute;inset:0;z-index:1}
 .panel .label{position:sticky;bottom:20px;z-index:2;color:var(--white);font-size:18px;line-height:1.3;font-weight:500;letter-spacing:-.01em;margin-bottom:20px;pointer-events:none;width:fit-content}
 
-.story{background:var(--navy);color:var(--white);display:flex;justify-content:center;overflow:hidden}
-.story-in{width:100%;max-width:1536px;padding:80px var(--gr) 80px var(--gl)}
-@media (min-width:768px){.story-in{padding-block:120px}}
-.story-move{will-change:transform}
-.story-list{display:flex;flex-direction:column;align-items:center;gap:clamp(90px,14vh,150px);text-align:center}
-.story-list a{display:block;max-width:15em;font-size:clamp(24px,2.9vw,38px);line-height:1.18;font-weight:500;letter-spacing:-.02em;text-wrap:balance}
-.story-list a:hover p{text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:1px}
-.story-list p{margin:0}
+/* services: sticky photo on one side, statements light up one at a time as they cross the middle of the screen */
+.svc{background:var(--navy);color:var(--white);position:relative;overflow:clip}
+.svc::before{content:"";position:absolute;right:-6vw;bottom:-4vw;width:min(70vw,980px);aspect-ratio:651/416;background:var(--white);opacity:.035;-webkit-mask:url(img/logo-mark.png) center/contain no-repeat;mask:url(img/logo-mark.png) center/contain no-repeat;pointer-events:none}
+.svc-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);position:relative}
+.svc-media{position:sticky;top:0;height:100vh;height:100dvh;overflow:hidden;background:#1e2128}
+.svc-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%;opacity:0;transform:scale(1.08);transition:opacity .9s ease,transform 2.4s cubic-bezier(.2,.6,.2,1)}
+.svc-media img.on{opacity:1;transform:scale(1)}
+.svc-media::after{content:"";position:absolute;inset:auto 0 0;height:30%;background:linear-gradient(transparent,rgba(20,22,28,.55));pointer-events:none}
+.svc-cap{position:absolute;left:var(--gl);bottom:22px;z-index:2;display:flex;align-items:center;gap:12px;font-size:12px;letter-spacing:.16em;text-transform:uppercase}
+.svc-cap .mk{width:30px}
+.svc-list{padding:0 max(var(--gr),5vw) 12vh max(var(--gl),5vw)}
+.svc-intro{height:22vh;display:flex;align-items:flex-end}
+.k{display:inline-flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--stone);font-weight:400}
+.k::before{content:"";width:22px;height:1px;background:currentColor}
+.svc-item{min-height:78vh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start}
+.svc-item h3{font-size:clamp(34px,4.3vw,66px);line-height:1.02;font-weight:500;letter-spacing:-.035em;margin:18px 0 0;max-width:10.5em;text-wrap:balance;color:rgba(179,177,167,.24);transition:color .6s ease}
+.svc-item.on h3{color:var(--white)}
+.svc-item p{max-width:36ch;margin:22px 0 0;color:var(--stone);font-size:15px;line-height:1.55}
+.svc-item p,.svc-item .u,.svc-item .k{opacity:.25;transition:opacity .6s ease,transform .6s ease;transform:translateY(6px)}
+.svc-item.on p,.svc-item.on .u,.svc-item.on .k{opacity:1;transform:none}
+.svc-item .u{margin-top:22px;color:var(--white)}
+@media (max-width:899px){
+  .svc-grid{grid-template-columns:1fr}
+  .svc-media{top:calc(var(--hh) + env(safe-area-inset-top,0px));height:46vh;z-index:2}
+  .svc-list{padding:0 var(--gr) 10vh var(--gl)}
+  .svc-intro{height:10vh}
+  .svc-item{min-height:58vh}
+  .svc-item h3{font-size:clamp(30px,8.4vw,44px)}
+}
+@media (prefers-reduced-motion:reduce){.svc-media img{transform:none}}
 
 /* ---------- product rail (home + product page) ---------- */
 .rail{padding:56px 0 64px}
@@ -429,14 +451,25 @@ footer{background:var(--navy);color:var(--white)}
     <div class="panel"><div class="scene"><img src="img/suede-moc.webp" alt="Dark brown suede moccasin, close-up of the stitched toe" loading="lazy"></div><a class="cover" href="#c-shoes" aria-label="Suede Loafers"></a><div class="label">Suede Loafers</div></div>
   </div>
 
-  <section class="story" id="story" aria-label="Services">
-    <div class="story-in"><div class="story-move" id="storyMove" style="transform:translateY(-250px)"><div class="story-list">
-      <a href="#c-suits"><p>Timeless tailoring, cut for the way you live now.</p></a>
-      <a href="#store"><p>One-to-one styling and fit advice, in store or online.</p></a>
-      <a href="#c-suits"><p>Custom Made, cut to your 28 measurements.</p></a>
-      <a href="#store"><p>Save your sizes once and dress with confidence.</p></a>
-      <a href="#store"><p>Alterations by the tailors in every Rixance store.</p></a>
-    </div></div></div>
+  <section class="svc" id="story" aria-label="The Rixance service">
+    <div class="svc-grid">
+      <div class="svc-media" id="svcMedia">
+        <img src="img/suits-black.webp" alt="Man in a black suit seated on a cream chair" class="on" style="object-position:50% 25%">
+        <img src="img/bw-portrait.webp" alt="Black and white portrait in a panelled room" loading="lazy">
+        <img src="img/hero-basting.webp" alt="Jacket front marked with tailor's chalk" loading="lazy">
+        <img src="img/bw-couple.webp" alt="Black and white portrait of a couple at home" loading="lazy" style="object-position:50% 35%">
+        <img src="img/craft-navy.webp" alt="Navy jacket basted with white thread for a fitting" loading="lazy">
+        <div class="svc-cap"><span class="mk" aria-hidden="true"></span><span id="svcKey">Ready to wear</span></div>
+      </div>
+      <div class="svc-list" id="svcList">
+        <div class="svc-intro"><span class="k">The Rixance service</span></div>
+        <article class="svc-item on"><span class="k">Ready to wear</span><h3>Timeless tailoring, cut for the way you live now.</h3><p>Suits and jackets in Italian cloth, half canvassed and finished by hand.</p><a class="u" href="#c-suits">Shop suits</a></article>
+        <article class="svc-item"><span class="k">Styling</span><h3>One-to-one styling, in store or online.</h3><p>An hour with a Rixance stylist for a new wardrobe, an occasion or a single piece.</p><a class="u" href="#store">Book an appointment</a></article>
+        <article class="svc-item"><span class="k">Custom Made</span><h3>Cut to your 28 measurements.</h3><p>Choose the cloth, lapel, lining and buttons. Delivered in four weeks.</p><a class="u" href="#c-suits">Design your own</a></article>
+        <article class="svc-item"><span class="k">Size profile</span><h3>Your sizes, saved once. Every visit after, effortless.</h3><p>We keep your measurements on file, so the next suit fits from the first try.</p><a class="u" href="#store">Create your profile</a></article>
+        <article class="svc-item"><span class="k">Alterations</span><h3>Finished by the tailors in every store.</h3><p>Sleeves, hems and waists, ready in 30 minutes to 3 days.</p><a class="u" href="#store">Find a store</a></article>
+      </div>
+    </div>
   </section>
 </main>
 
@@ -762,13 +795,20 @@ function route(){
 addEventListener("hashchange",route);
 
 // ---------- scroll effects ----------
-const story=$("#story"), move=$("#storyMove"), reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const svcItems=$$(".svc-item"), svcImgs=$$("#svcMedia img"), svcMedia=$("#svcMedia"); let svcOn=0; const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 let ticking=false;
 function onScroll(){
   ticking=false; setHeader();
-  if(view==="home" && !reduce){ const r=story.getBoundingClientRect(), vh=innerHeight; const p=Math.min(1,Math.max(0,(vh-r.top)/(vh+r.height*.5))); move.style.transform=`translateY(${(-250*(1-p)).toFixed(1)}px)`; }
+  if(view==="home") svcActive();
   if(view==="collection"){ const b=$("#filterBtn").getBoundingClientRect(); $("#floatFilter").classList.toggle("on", b.bottom < 52); }
   if(view==="product"){ const c=$("#mainCtas"); if(c){ const r=c.getBoundingClientRect(); $("#mbar").classList.toggle("on", r.bottom<52 && innerWidth<1024); } }
+}
+function svcActive(){
+  const mb=innerWidth<900?svcMedia.getBoundingClientRect().bottom:0, mid=(Math.max(mb,0)+innerHeight)/2;
+  let best=svcOn,d=1e9; svcItems.forEach((it,i)=>{ const r=it.getBoundingClientRect(); const dd=Math.abs(r.top+r.height/2-mid); if(dd<d){d=dd;best=i;} });
+  if(best===svcOn) return; svcOn=best;
+  svcItems.forEach((it,i)=>it.classList.toggle("on",i===best)); svcImgs.forEach((im,i)=>im.classList.toggle("on",i===best));
+  $("#svcKey").textContent=svcItems[best].querySelector(".k").textContent;
 }
 addEventListener("scroll",()=>{ if(!ticking){ ticking=true; requestAnimationFrame(onScroll); } },{passive:true});
 addEventListener("resize",onScroll);
