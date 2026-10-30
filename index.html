@@ -1,0 +1,699 @@
+<title>Rixance Menswear</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600&display=swap">
+<style>
+/* Layout: Suitsupply-style storefront in Rixance identity. Fixed header; home = stacked full-screen photography;
+   collection = 6-col grid of half-width cards with full-width editorial breaks; product = scrolling photo column + sticky buy panel.
+   Single brand look (Rixance guidelines): navy / olive / steel / stone, Hanken Grotesk Medium for headlines, Light for content. */
+:root{
+  color-scheme:light;
+  --navy:#2C303A; --olive:#3F3F32; --steel:#8197A3; --stone:#B3B1A7;
+  --white:#ffffff; --paper:#F2F1ED; --line:#DEDCD5; --grey:#6E6F70; --line-inv:#454a56; --muted-inv:#B3B1A7;
+  --f:"Hanken Grotesk","Helvetica Neue",Arial,sans-serif;
+  --gl:max(16px,env(safe-area-inset-left,0px)); --gr:max(16px,env(safe-area-inset-right,0px));
+  --hh:52px;
+}
+@media (min-width:1024px){:root{--gl:max(20px,env(safe-area-inset-left,0px));--gr:max(20px,env(safe-area-inset-right,0px))}}
+*{box-sizing:border-box}
+body{background:var(--white);color:var(--navy);font-family:var(--f);font-size:14px;line-height:1.5;font-weight:300;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4,b,strong{font-weight:500}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+:focus-visible{outline:2px solid var(--steel);outline-offset:3px}
+svg.i{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.4;display:block}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.u{display:inline-block;font-weight:500;border-bottom:1px solid currentColor;padding-bottom:2px}
+.wm,.mk{display:block;background:currentColor;-webkit-mask:var(--m) center/contain no-repeat;mask:var(--m) center/contain no-repeat}
+.wm{--m:url(img/logo-word.png);aspect-ratio:1341/179}
+.mk{--m:url(img/logo-mark.png);aspect-ratio:651/416}
+
+/* ---------- header ---------- */
+header.site{position:fixed;top:0;left:0;right:0;z-index:40;height:calc(var(--hh) + env(safe-area-inset-top,0px));padding-top:env(safe-area-inset-top,0px);padding-left:var(--gl);padding-right:var(--gr);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;color:var(--white);background:transparent;transition:background-color .3s cubic-bezier(.49,.03,.13,.99),color .3s}
+header.site::before{content:"";position:absolute;inset:0 0 auto;height:110px;background:linear-gradient(rgba(20,22,28,.3),transparent);pointer-events:none;z-index:-1;transition:opacity .3s}
+@media (hover:hover){header.site:hover{background:var(--white);color:var(--navy)}header.site:hover::before{opacity:0}}
+header.site.is-white{background:var(--white);color:var(--navy);box-shadow:0 1px 0 var(--line)}
+header.site.is-white::before{opacity:0}
+.h-left,.h-right{display:flex;align-items:center;gap:4px}
+.h-right{justify-content:flex-end}
+.ib{width:36px;height:36px;display:grid;place-items:center;position:relative}
+.logo .wm{width:124px}
+@media (max-width:420px){.logo .wm{width:100px}.ib{width:32px}}
+.count{position:absolute;top:2px;right:0;min-width:16px;height:16px;border-radius:8px;background:var(--olive);color:var(--white);font-size:10px;font-weight:500;display:grid;place-items:center;padding:0 4px}
+.count[data-n="0"]{display:none}
+
+/* ---------- views ---------- */
+.view[hidden]{display:none!important}
+.page{padding-top:calc(var(--hh) + env(safe-area-inset-top,0px))}
+
+/* ---------- photo scenes (home) ---------- */
+.scene{position:absolute;inset:0;overflow:hidden;background:var(--navy)}
+.scene::after{content:"";position:absolute;left:0;right:0;bottom:0;height:24%;background:linear-gradient(transparent,rgba(20,22,28,.4))}
+.scene img{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:50% 20%}
+.scene.duo .duo-2{display:none}
+@media (min-width:1024px){.scene.duo img{width:50%}.scene.duo .duo-2{display:block;left:50%}}
+
+.hero{position:relative;isolation:isolate;min-height:100dvh}
+.hero-stick{position:sticky;top:0;z-index:1;height:100dvh;overflow:hidden}
+.hero-index{position:relative;z-index:2;width:fit-content;max-width:100%;overflow-wrap:anywhere;padding:0 var(--gr) 20px var(--gl);margin-top:calc(-1 * (var(--lh) + 20px));--lh:clamp(36px,4.2vw,56px)}
+.hero-index a{display:block;color:var(--white);font-size:clamp(30px,3.6vw,48px);line-height:var(--lh);font-weight:500;letter-spacing:-.02em;transition:opacity .2s}
+.hero-index:hover a{opacity:.55}
+.hero-index a:hover{opacity:1}
+
+.row{display:block}
+@media (min-width:1024px){.row{display:flex}.row>.panel{flex:1 1 50%}}
+.panel{position:relative;height:100vh;height:100dvh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 var(--gr) 0 var(--gl)}
+.panel>a.cover{position:absolute;inset:0;z-index:1}
+.panel .label{position:sticky;bottom:20px;z-index:2;color:var(--white);font-size:18px;line-height:1.3;font-weight:500;letter-spacing:-.01em;margin-bottom:20px;pointer-events:none;width:fit-content}
+
+.story{background:var(--navy);color:var(--white);display:flex;justify-content:center;overflow:hidden}
+.story-in{width:100%;max-width:1536px;padding:80px var(--gr) 80px var(--gl)}
+@media (min-width:768px){.story-in{padding-block:120px}}
+.story-move{will-change:transform}
+.story-list{display:flex;flex-direction:column;align-items:center;gap:clamp(90px,14vh,150px);text-align:center}
+.story-list a{display:block;max-width:15em;font-size:clamp(24px,2.9vw,38px);line-height:1.18;font-weight:500;letter-spacing:-.02em;text-wrap:balance}
+.story-list a:hover p{text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:1px}
+.story-list p{margin:0}
+
+/* ---------- product rail (home + product page) ---------- */
+.rail{padding:56px 0 64px}
+.rail-head{display:flex;justify-content:space-between;align-items:end;gap:16px;padding:0 var(--gr) 22px var(--gl)}
+.rail-head h2{font-size:clamp(22px,2.2vw,30px);font-weight:500;letter-spacing:-.02em;margin:0;line-height:1.1}
+.rail-ctl{display:flex;align-items:center;gap:6px}
+.rail-ctl .u{margin-right:10px}
+@media (hover:none){.rail-ctl .ib{display:none}}
+.rail-track{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - var(--gl) - var(--gr) - 3*4px)/4);gap:4px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-left:var(--gl);padding:0 var(--gr) 6px var(--gl);scrollbar-width:none}
+.rail-track::-webkit-scrollbar{display:none}
+@media (max-width:1023px){.rail-track{grid-auto-columns:calc((100% - var(--gl) - var(--gr) - 4px)/2.3)}}
+@media (max-width:560px){.rail-track{grid-auto-columns:72%}}
+.prod{scroll-snap-align:start;min-width:0}
+.prod .ph{position:relative;display:block;aspect-ratio:3/4;max-width:100%;background:var(--paper);overflow:hidden}
+.prod .ph img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s cubic-bezier(.49,.03,.13,.99)}
+.prod:hover .ph img{transform:scale(1.03)}
+.tag{position:absolute;top:10px;left:10px;font-size:12px;font-weight:500;z-index:2;color:var(--navy)}
+.qa{position:absolute;left:8px;right:8px;bottom:8px;background:var(--white);padding:10px;opacity:0;transform:translateY(8px);transition:.25s;z-index:3}
+.prod:hover .qa,.prod:focus-within .qa{opacity:1;transform:none}
+@media (hover:none){.qa{display:none}}
+.qa span{display:block;font-size:12px;color:var(--grey);margin-bottom:6px}
+.qa div{display:flex;flex-wrap:wrap;gap:4px}
+.qa button,.szb{min-width:40px;height:30px;border:1px solid var(--line);font-size:12px;font-variant-numeric:tabular-nums}
+.qa button:hover{border-color:var(--navy)}
+.prod .meta{padding:10px 4px 0;display:flex;justify-content:space-between;gap:12px}
+.prod h3{font-size:14px;font-weight:500;margin:0}
+.col{color:var(--grey);font-size:13px}
+.pr{font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:400}
+
+/* ---------- collection ---------- */
+.cats{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - var(--gl) - var(--gr) - 5*16px)/6.4);gap:16px;overflow-x:auto;scrollbar-width:none;padding:20px var(--gr) 8px var(--gl);scroll-snap-type:x mandatory;scroll-padding-left:var(--gl)}
+.cats::-webkit-scrollbar{display:none}
+@media (max-width:1023px){.cats{grid-auto-columns:calc((100% - var(--gl) - var(--gr) - 4*20px)/4.4);gap:20px}}
+@media (max-width:767px){.cats{grid-auto-columns:calc((100% - var(--gl) - var(--gr) - 3*16px)/3.4);gap:16px}}
+@media (max-width:480px){.cats{grid-auto-columns:calc((100% - var(--gl) - 2*16px)/2.6)}}
+.cats a{scroll-snap-align:start;min-width:0;display:block}
+.cats .ci{aspect-ratio:800/960;max-width:100%;background:var(--paper);overflow:hidden}
+.cats img{width:100%;height:100%;object-fit:cover;display:block}
+.cats p{margin:8px 0 0;font-size:14px;font-weight:500}
+.cats a[aria-current="page"] p{text-decoration:underline;text-underline-offset:4px}
+.c-head{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;padding:32px var(--gr) 28px var(--gl);flex-wrap:wrap}
+.c-head h1{font-size:clamp(26px,2.6vw,36px);letter-spacing:-.02em;margin:0 0 8px;line-height:1.1}
+.c-desc{max-width:62ch;margin:0;color:var(--grey)}
+.c-desc button{text-decoration:underline;text-underline-offset:3px;color:var(--navy)}
+.c-tools{display:flex;align-items:center;gap:18px}
+.pill{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 18px;border:1px solid var(--navy);border-radius:999px;font-weight:500;background:var(--white)}
+.pill svg.i{width:16px;height:16px}
+.float-filter{position:fixed;top:calc(var(--hh) + env(safe-area-inset-top,0px) + 12px);right:var(--gr);z-index:30;transform:translateY(calc(-100% - 80px));opacity:0;transition:transform .4s cubic-bezier(.49,.03,.13,.99),opacity .3s;pointer-events:none}
+.float-filter.on{transform:none;opacity:1;pointer-events:auto}
+.grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:64px 8px;padding:0 0 80px}
+@media (max-width:767px){.grid{grid-template-columns:1fr;gap:40px 0}}
+.card{grid-column:span 3;min-width:0}
+@media (max-width:767px){.card{grid-column:auto}}
+.card.wide{grid-column:1/-1}
+.slider{position:relative;aspect-ratio:628/838;max-width:100%;background:var(--paper);overflow:hidden}
+.slides{display:flex;height:100%;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.slides::-webkit-scrollbar{display:none}
+.slides a{flex:0 0 100%;height:100%;scroll-snap-align:start;position:relative;overflow:hidden;display:block}
+.slides img{width:100%;height:100%;object-fit:cover;display:block}
+.zoom img{transform:scale(var(--z,1.9));transform-origin:var(--o,50% 35%)}
+.segs{position:absolute;left:16px;right:16px;bottom:14px;display:flex;gap:4px;z-index:2;pointer-events:none}
+.segs i{flex:1;height:2px;background:rgba(44,48,58,.22)}
+.segs i.on{background:var(--navy)}
+.arr{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:40px;height:40px;display:grid;place-items:center;background:rgba(255,255,255,.85);opacity:0;transition:opacity .2s}
+.arr.l{left:10px}.arr.r{right:10px}
+@media (hover:hover){.slider:hover .arr{opacity:1}}
+.card .info{padding:12px var(--gr) 0 var(--gl)}
+@media (min-width:768px){.card:nth-child(odd of .card:not(.wide)) .info{padding-right:12px}.card .info{padding-left:12px}}
+.card .t-row{display:flex;justify-content:space-between;gap:14px}
+.card .t-row a{font-weight:500}
+.card .mat{margin:2px 0 0;color:var(--grey);font-size:13px}
+.sw{display:flex;gap:6px;margin-top:10px}
+.sw span{width:12px;height:12px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
+.edit{position:relative;display:block;aspect-ratio:1265/700;max-width:100%;overflow:hidden;background:var(--navy);color:var(--white)}
+.edit img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%}
+.edit::after{content:"";position:absolute;inset:auto 0 0 0;height:50%;background:linear-gradient(transparent,rgba(20,22,28,.55))}
+.edit div{position:absolute;left:var(--gl);bottom:24px;z-index:2;max-width:420px}
+.edit h3{font-size:clamp(20px,2vw,28px);margin:0 0 6px;letter-spacing:-.01em}
+.edit p{margin:0 0 12px;opacity:.85}
+@media (max-width:767px){.edit{aspect-ratio:4/5}}
+.empty{grid-column:1/-1;padding:40px var(--gl);color:var(--grey)}
+
+/* ---------- product page ---------- */
+.pdp{display:grid;grid-template-columns:1fr;gap:0}
+@media (min-width:1024px){.pdp{grid-template-columns:minmax(0,1fr) min(466px,38vw);gap:56px;padding-right:var(--gr)}}
+.gal{display:flex;flex-direction:column;gap:44px;padding-bottom:44px}
+.gal figure{margin:0;position:relative;overflow:hidden;background:var(--paper);max-width:100%}
+.gal .big{width:100%;aspect-ratio:3/4.15}
+.gal .big.first{aspect-ratio:5/9}
+.gal .small{width:61%;margin-left:auto;aspect-ratio:3/4}
+.gal img{width:100%;height:100%;object-fit:cover;display:block}
+.gal .zoom img{object-fit:cover}
+.gal-count{display:none}
+@media (max-width:1023px){
+  .gal{flex-direction:row;gap:0;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:0;position:relative}
+  .gal::-webkit-scrollbar{display:none}
+  .gal figure,.gal .big,.gal .big.first,.gal .small{flex:0 0 100%;width:100%;margin:0;aspect-ratio:3/4;scroll-snap-align:start}
+  .gal-wrap{position:relative}
+  .gal-count{display:block;position:absolute;right:var(--gr);bottom:14px;background:rgba(255,255,255,.9);padding:3px 10px;font-size:12px;font-variant-numeric:tabular-nums;border-radius:999px}
+}
+.buy{padding:28px var(--gr) 40px var(--gl)}
+@media (min-width:1024px){.buy{position:sticky;top:calc(var(--hh) + env(safe-area-inset-top,0px));align-self:start;padding:48px 0 40px;max-height:calc(100dvh - var(--hh));overflow:auto;scrollbar-width:thin}}
+.buy .badge{font-size:13px;font-weight:500;color:var(--olive)}
+.buy h1{font-size:clamp(22px,2vw,28px);letter-spacing:-.02em;line-height:1.15;margin:6px 0 6px}
+.buy .mat{color:var(--grey);margin:0}
+.buy .price{font-size:18px;margin:14px 0 22px;font-variant-numeric:tabular-nums;font-weight:400}
+.buy .clabel{font-size:13px;margin-bottom:8px}
+.buy .clabel b{font-weight:500}
+.thumbs{display:flex;gap:6px;margin-bottom:26px;flex-wrap:wrap}
+.thumbs a{width:66px;height:66px;background:var(--paper);overflow:hidden;outline:1px solid transparent;outline-offset:2px}
+.thumbs a[aria-current="true"]{outline-color:var(--navy)}
+.thumbs img{width:100%;height:100%;object-fit:cover;object-position:50% 25%}
+.ctas{display:grid;grid-template-columns:1fr 1.4fr;gap:8px}
+.btn{height:48px;display:grid;place-items:center;font-weight:500;border:1px solid var(--navy)}
+.btn.dark{background:var(--navy);color:var(--white)}
+.btn.dark:hover{background:var(--olive);border-color:var(--olive)}
+.btn.line:hover{background:var(--paper)}
+.ship{display:flex;align-items:center;gap:8px;margin:16px 0 22px;font-size:13px}
+.ship svg.i{width:18px;height:18px}
+details.acc{border-top:1px solid var(--line)}
+details.acc:last-of-type{border-bottom:1px solid var(--line)}
+details.acc summary{list-style:none;display:flex;justify-content:space-between;align-items:center;padding:16px 0;font-weight:500;cursor:pointer}
+details.acc summary::-webkit-details-marker{display:none}
+details.acc summary::after{content:"+";font-weight:300;font-size:20px;line-height:1}
+details.acc[open] summary::after{content:"–"}
+details.acc .ab{padding:0 0 18px;color:var(--grey)}
+details.acc dl{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;margin:0}
+details.acc dt{color:var(--navy)}
+details.acc dd{margin:0}
+.pdesc{margin-top:26px;display:grid;gap:14px}
+.pdesc p{margin:0}
+.pdesc b{display:block;color:var(--navy)}
+.mbar{position:fixed;left:0;right:0;bottom:0;z-index:35;display:grid;grid-template-columns:1fr 1.4fr;gap:8px;background:var(--white);padding:12px var(--gr) calc(12px + env(safe-area-inset-bottom,0px)) var(--gl);box-shadow:0 -1px 0 var(--line);transform:translateY(100%);transition:transform .5s cubic-bezier(.49,.03,.13,.99)}
+.mbar.on{transform:none}
+@media (min-width:1024px){.mbar{display:none}}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 0 64px}
+@media (max-width:767px){.tiles{grid-template-columns:1fr}}
+.tiles a{position:relative;display:block;aspect-ratio:4/5;max-width:100%;overflow:hidden;color:var(--white)}
+.tiles img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.tiles a::after{content:"";position:absolute;inset:auto 0 0;height:45%;background:linear-gradient(transparent,rgba(20,22,28,.55))}
+.tiles div{position:absolute;left:var(--gl);right:var(--gr);bottom:22px;z-index:2}
+.tiles h3{margin:0 0 4px;font-size:20px}
+.tiles p{margin:0;opacity:.85;max-width:36ch}
+.pdp-intro{padding:52px var(--gr) 22px var(--gl);font-size:clamp(22px,2.4vw,32px);font-weight:500;letter-spacing:-.02em;line-height:1.15;margin:0}
+
+/* ---------- footer ---------- */
+footer{background:var(--navy);color:var(--white)}
+.f-store{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line-inv)}
+.f-store .txt{padding:28px var(--gr) 28px var(--gl)}
+.f-store h2{font-size:clamp(24px,2.4vw,32px);font-weight:500;letter-spacing:-.02em;margin:0 0 10px;line-height:1.1}
+.f-store p{margin:0 0 22px;color:var(--muted-inv);max-width:34ch}
+.f-store .pic{position:relative;min-height:300px}
+.f-store .pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.f-serv{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;padding:64px var(--gr) 64px var(--gl);border-top:1px solid var(--line-inv)}
+.f-serv svg.i{width:26px;height:26px;margin-bottom:16px;color:var(--stone)}
+.f-serv h3{font-size:17px;font-weight:500;margin:0 0 8px}
+.f-serv p{margin:0 0 18px;color:var(--muted-inv);max-width:30ch}
+.f-sub{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;padding:28px var(--gr) 28px var(--gl);border-top:1px solid var(--line-inv)}
+.f-sub h3{font-size:17px;font-weight:500;margin:0}
+.f-sub form{display:flex;flex:1 1 320px;max-width:460px}
+.f-sub input{flex:1;min-width:0;height:44px;background:transparent;border:1px solid var(--line-inv);border-right:0;color:var(--white);padding:0 14px;font:inherit}
+.f-sub input::placeholder{color:var(--muted-inv)}
+.f-sub button{height:44px;padding:0 22px;background:var(--stone);color:var(--navy);font-weight:500}
+.f-links{display:grid;grid-template-columns:1.2fr repeat(4,minmax(0,1fr));gap:28px;padding:44px var(--gr) 44px var(--gl);border-top:1px solid var(--line-inv)}
+.f-links h4{font-size:14px;font-weight:500;margin:0 0 14px}
+.f-links ul{list-style:none;margin:0;padding:0;display:grid;gap:8px;color:var(--muted-inv)}
+.f-links a:hover{color:var(--white)}
+.f-links dl{margin:0;display:grid;gap:2px;color:var(--muted-inv)}
+.f-links dt{color:var(--white);margin-top:8px}
+.f-links dd{margin:0;user-select:all}
+.f-brand{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;padding:48px var(--gr) 36px var(--gl);border-top:1px solid var(--line-inv);color:var(--stone)}
+.f-brand .wm{width:min(560px,70vw)}
+.f-brand .mk{width:clamp(48px,6vw,84px)}
+.f-pattern{height:28px;background:var(--stone);opacity:.18;-webkit-mask:url(img/logo-mark.png) 0 50%/44px auto repeat-x;mask:url(img/logo-mark.png) 0 50%/44px auto repeat-x;margin:0 var(--gr) 0 var(--gl)}
+.f-legal{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:20px var(--gr) calc(24px + env(safe-area-inset-bottom,0px)) var(--gl);border-top:1px solid var(--line-inv);color:var(--muted-inv);font-size:13px;margin-top:24px}
+.f-legal div{display:flex;gap:18px;flex-wrap:wrap}
+@media (max-width:900px){.f-links{grid-template-columns:repeat(2,minmax(0,1fr))}.f-links>div:first-child{grid-column:1/-1}}
+@media (max-width:760px){.f-store{grid-template-columns:1fr}.f-store .pic{min-height:240px}.f-serv{grid-template-columns:1fr;gap:40px}}
+
+/* ---------- sheets: menu, bag, size, filter ---------- */
+.scrim{position:fixed;inset:0;background:rgba(20,22,28,.45);z-index:50;opacity:0;pointer-events:none;transition:opacity .3s}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;top:0;bottom:0;z-index:60;width:min(420px,100vw);background:var(--white);color:var(--navy);transition:transform .35s cubic-bezier(.49,.03,.13,.99);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);overflow:hidden}
+.sheet.left{left:0;transform:translateX(-100%);padding-left:env(safe-area-inset-left,0px)}
+.sheet.right{right:0;transform:translateX(100%);padding-right:env(safe-area-inset-right,0px)}
+.sheet.on{transform:none}
+.sheet-head{height:var(--hh);display:flex;align-items:center;justify-content:space-between;padding:0 12px 0 20px;border-bottom:1px solid var(--line);flex:none}
+.sheet-head .brand{display:flex;align-items:center;gap:10px}
+.sheet-head .mk{width:28px}.sheet-head .wm{width:96px}
+.levels{position:relative;flex:1;overflow:hidden}
+.level{position:absolute;inset:0;overflow:auto;padding:8px 20px 28px;background:var(--white);transition:transform .35s cubic-bezier(.49,.03,.13,.99)}
+.level.sub{transform:translateX(100%)}
+.level.sub.on{transform:none}
+.m-search{display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--navy);margin:12px 0 18px;height:42px}
+.m-search input{flex:1;min-width:0;border:0;font:inherit;font-size:15px;outline:none;background:transparent;color:var(--navy)}
+.m-top button,.m-top a{display:flex;justify-content:space-between;align-items:center;width:100%;padding:10px 0;font-size:22px;font-weight:500;letter-spacing:-.01em;text-align:left}
+.m-top svg.i{width:16px;height:16px}
+.m-meta{margin-top:26px;padding-top:16px;border-top:1px solid var(--line);display:flex;gap:18px;color:var(--grey)}
+.back{display:flex;align-items:center;gap:6px;color:var(--grey);padding:12px 0 6px}
+.level h3{font-size:22px;font-weight:500;margin:4px 0 14px;letter-spacing:-.01em}
+.level ul{list-style:none;margin:0 0 18px;padding:0;display:grid;gap:2px}
+.level ul a{display:block;padding:7px 0;font-size:15px}
+.level ul a:hover{text-decoration:underline;text-underline-offset:4px}
+.level .grp{font-size:12px;color:var(--grey);text-transform:uppercase;letter-spacing:.08em;margin:10px 0 4px}
+.coll a{display:block;padding:10px 0;border-bottom:1px solid var(--line)}
+.coll b{display:block;font-weight:500;font-size:15px}
+.coll span{color:var(--grey);font-size:13px}
+.s-body{flex:1;overflow:auto;padding:0 20px}
+.s-foot{padding:18px 20px;border-top:1px solid var(--line);display:grid;gap:12px}
+.bag-empty{padding:28px 0;color:var(--grey)}
+.bag-empty a{color:var(--navy)}
+.bag-line{display:grid;grid-template-columns:72px 1fr auto;gap:14px;padding:16px 0;border-bottom:1px solid var(--line);align-items:start}
+.bag-line img{width:72px;aspect-ratio:3/4;object-fit:cover;background:var(--paper)}
+.bag-line button{font-size:13px;color:var(--grey);text-decoration:underline;margin-top:6px}
+.row-t{display:flex;justify-content:space-between;font-variant-numeric:tabular-nums}
+.size-list{display:grid;gap:0;margin:8px 0 16px}
+.size-list button{display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--line);font-size:15px;font-variant-numeric:tabular-nums;text-align:left}
+.size-list button:hover{padding-left:6px;transition:padding .15s}
+.size-list .low{color:var(--olive);font-size:13px}
+.f-group{padding:18px 0;border-bottom:1px solid var(--line)}
+.f-group h4{margin:0 0 12px;font-size:14px}
+.f-group label{display:flex;align-items:center;gap:10px;padding:6px 0;cursor:pointer}
+.f-group input{accent-color:var(--navy);width:16px;height:16px}
+.chipset{display:flex;flex-wrap:wrap;gap:8px}
+.chipset button{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 12px;border:1px solid var(--line);border-radius:999px;font-size:13px}
+.chipset button[aria-pressed="true"]{border-color:var(--navy);box-shadow:inset 0 0 0 1px var(--navy)}
+.chipset i{width:12px;height:12px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
+
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,16px);background:var(--navy);color:var(--white);padding:11px 18px;opacity:0;transition:.25s;z-index:90;pointer-events:none;max-width:calc(100vw - 32px)}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}.story-move{transform:none!important}}
+</style>
+
+<header class="site" id="hdr">
+  <div class="h-left">
+    <button class="ib" id="menuBtn" aria-label="Open navigation menu" aria-expanded="false"><svg class="i" viewBox="0 0 24 24"><path d="M3 8h18M3 16h18"/></svg></button>
+    <button class="ib" id="searchBtn" aria-label="Search"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l5 5"/></svg></button>
+  </div>
+  <a class="logo" href="#home"><span class="wm" aria-hidden="true"></span><span class="sr">Rixance home</span></a>
+  <div class="h-right">
+    <button class="ib" aria-label="Account" id="acctBtn"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></button>
+    <button class="ib" id="bagBtn" aria-label="Shopping bag"><svg class="i" viewBox="0 0 24 24"><path d="M5 8h14l-1 13H6z"/><path d="M9 8V6a3 3 0 016 0v2"/></svg><span class="count" id="bagCount" data-n="0">0</span></button>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+
+<aside class="sheet left" id="menu" aria-label="Navigation menu" aria-hidden="true">
+  <div class="sheet-head"><span class="brand"><span class="mk" aria-hidden="true"></span><span class="wm" aria-hidden="true"></span><span class="sr">Rixance</span></span><button class="ib" data-close aria-label="Close menu"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="levels" id="levels">
+    <div class="level">
+      <label class="m-search" for="mSearch"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l5 5"/></svg><input id="mSearch" placeholder="Search" autocomplete="off"></label>
+      <nav class="m-top" id="mTop"></nav>
+      <div class="m-meta"><span>United States</span><span>English</span></div>
+    </div>
+  </div>
+</aside>
+
+<aside class="sheet right" id="bag" aria-label="Shopping bag" aria-hidden="true">
+  <div class="sheet-head"><b>Shopping bag</b><button class="ib" data-close aria-label="Close bag"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="s-body" id="bagBody"></div>
+  <div class="s-foot" id="bagFoot" hidden>
+    <div class="row-t"><span>Subtotal</span><b id="bagTotal">$0</b></div>
+    <div class="row-t col"><span>Delivery</span><span>Free</span></div>
+    <button class="btn dark" id="checkout">Checkout</button>
+  </div>
+</aside>
+
+<aside class="sheet right" id="sizes" aria-label="Select size" aria-hidden="true">
+  <div class="sheet-head"><b>Select size</b><button class="ib" data-close aria-label="Close size selection"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="s-body"><p class="col" id="sizeFor" style="margin:16px 0 4px"></p><div class="size-list" id="sizeList"></div><p class="col">Between sizes? Size up. Sleeves and hems are altered for free in store.</p></div>
+</aside>
+
+<aside class="sheet right" id="filters" aria-label="Filter and sort" aria-hidden="true">
+  <div class="sheet-head"><b>Filter</b><button class="ib" data-close aria-label="Close filters"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="s-body">
+    <div class="f-group"><h4>Sort by</h4><div id="sortOpts"></div></div>
+    <div class="f-group"><h4>Colour</h4><div class="chipset" id="colourOpts"></div></div>
+  </div>
+  <div class="s-foot"><button class="btn dark" data-close id="applyF">Show products</button><button class="u" id="clearF" style="justify-self:center">Clear all</button></div>
+</aside>
+
+<!-- ================= HOME ================= -->
+<main class="view" id="v-home">
+  <div class="hero">
+    <div class="hero-stick">
+      <div class="scene duo">
+        <img src="img/hero-coat.webp" alt="Man in a long black overcoat in front of a stone facade" style="object-position:50% 30%">
+        <img src="img/hero-basting.webp" alt="Basted jacket front with white tailor's chalk lines" class="duo-2">
+      </div>
+    </div>
+    <nav class="hero-index" aria-label="Shop categories">
+      <a href="#c-new-arrivals">New Arrivals</a><a href="#c-suits">Suits</a><a href="#c-pants">Pants</a><a href="#c-knitwear">Knitwear &amp; Sweaters</a><a href="#c-coats">Coats &amp; Vests</a><a href="#c-jackets">Jackets &amp; Blazers</a><a href="#c-suits">Tuxedos</a><a href="#c-jackets">Shirts</a><a href="#c-knitwear">Polos &amp; T‑Shirts</a><a href="#c-shoes">Shoes</a><a href="#c-new-arrivals">Accessories</a>
+    </nav>
+  </div>
+
+  <section class="rail" aria-label="New Arrivals">
+    <div class="rail-head"><h2>New Arrivals</h2>
+      <div class="rail-ctl"><a class="u" href="#c-new-arrivals">Shop all</a><button class="ib" data-rail="-1" aria-label="Previous products"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><button class="ib" data-rail="1" aria-label="Next products"><svg class="i" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div>
+    </div>
+    <div class="rail-track" id="homeRail"></div>
+  </section>
+
+  <div class="row">
+    <div class="panel"><div class="scene"><img src="img/suits-black.webp" alt="Man in a black suit seated on a cream chair" loading="lazy"></div><a class="cover" href="#c-suits" aria-label="Latest in Suits"></a><div class="label">Latest in Suits</div></div>
+    <div class="panel"><div class="scene"><img src="img/suits-green-db.webp" alt="Man in an olive double-breasted suit" loading="lazy" style="object-position:30% 50%"></div><a class="cover" href="#p-olive-double-breasted-suit" aria-label="The Double-Breasted Suit"></a><div class="label">The Double-Breasted Suit</div></div>
+  </div>
+  <div class="row">
+    <div class="panel"><div class="scene"><img src="img/coat-camel.webp" alt="Camel double-breasted overcoat with a burgundy scarf" loading="lazy"></div><a class="cover" href="#c-coats" aria-label="Coats and Overcoats"></a><div class="label">Coats &amp; Overcoats</div></div>
+    <div class="panel"><div class="scene"><img src="img/ivory-db.webp" alt="Ivory double-breasted jacket over a cream knit" loading="lazy"></div><a class="cover" href="#p-ivory-double-breasted-jacket" aria-label="Ivory Tailoring"></a><div class="label">Ivory Tailoring</div></div>
+  </div>
+  <div class="row">
+    <div class="panel"><div class="scene"><img src="img/linen-garden.webp" alt="Off-white raw silk shirt jacket and trousers in a garden" loading="lazy" style="object-position:50% 25%"></div><a class="cover" href="#p-raw-silk-shirt-jacket" aria-label="Linen and Raw Silk"></a><div class="label">Linen &amp; Raw Silk</div></div>
+    <div class="panel"><div class="scene"><img src="img/suede-moc.webp" alt="Dark brown suede moccasin, close-up of the stitched toe" loading="lazy"></div><a class="cover" href="#c-shoes" aria-label="Suede Loafers"></a><div class="label">Suede Loafers</div></div>
+  </div>
+
+  <section class="story" id="story" aria-label="Services">
+    <div class="story-in"><div class="story-move" id="storyMove" style="transform:translateY(-250px)"><div class="story-list">
+      <a href="#c-suits"><p>Timeless tailoring, cut for the way you live now.</p></a>
+      <a href="#store"><p>One-to-one styling and fit advice, in store or online.</p></a>
+      <a href="#c-suits"><p>Custom Made, cut to your 28 measurements.</p></a>
+      <a href="#store"><p>Save your sizes once and dress with confidence.</p></a>
+      <a href="#store"><p>Alterations by the tailors in every Rixance store.</p></a>
+    </div></div></div>
+  </section>
+</main>
+
+<!-- ================= COLLECTION ================= -->
+<main class="view page" id="v-collection" hidden>
+  <nav class="cats" id="catRail" aria-label="Categories"></nav>
+  <div class="c-head">
+    <div><h1 id="cTitle"></h1><p class="c-desc" id="cDesc"></p></div>
+    <div class="c-tools"><span class="col" id="cCount"></span><button class="pill" id="filterBtn"><svg class="i" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>Filter</button></div>
+  </div>
+  <div class="grid" id="cGrid"></div>
+</main>
+<button class="pill float-filter" id="floatFilter" aria-label="Filter products"><svg class="i" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>Filter</button>
+
+<!-- ================= PRODUCT ================= -->
+<main class="view page" id="v-product" hidden>
+  <div class="pdp">
+    <div class="gal-wrap"><div class="gal" id="gal"></div><span class="gal-count" id="galCount"></span></div>
+    <div class="buy" id="buy"></div>
+  </div>
+  <section class="rail" aria-label="You might also like" style="padding-top:24px">
+    <div class="rail-head"><h2>You Might Also Like</h2>
+      <div class="rail-ctl"><button class="ib" data-rail="-1" aria-label="Previous products"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><button class="ib" data-rail="1" aria-label="Next products"><svg class="i" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div>
+    </div>
+    <div class="rail-track" id="pdpRail"></div>
+  </section>
+  <p class="pdp-intro">Fit in on your own terms.<br>Find your own perfect fit.</p>
+  <div class="tiles">
+    <a href="#store"><img src="img/craft-navy.webp" alt="Navy jacket basted with white thread for a fitting" loading="lazy"><div><h3>Alter Your Fit</h3><p>Shorten, lengthen and taper, done by the tailors in every Rixance store.</p></div></a>
+    <a href="#c-suits"><img src="img/hero-basting.webp" alt="Jacket front marked with tailor's chalk" loading="lazy"><div><h3>Design Your Own</h3><p>Create a Custom Made piece from the cloth up.</p></div></a>
+  </div>
+  <div class="mbar" id="mbar"><button class="btn line" data-custom>Customize</button><button class="btn dark" data-size-open>Select size</button></div>
+</main>
+
+<footer id="store">
+  <section class="f-store">
+    <div class="txt"><h2>Find your nearest store</h2><p>Visit a Rixance store for customizations, fittings and styling advice.</p><a class="u" href="#store">Find store</a></div>
+    <div class="pic"><img src="img/bw-couple.webp" alt="Black and white portrait of a couple at home" loading="lazy" style="object-position:50% 35%"></div>
+  </section>
+  <section class="f-serv">
+    <div><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="7" r="3.5"/><path d="M5 20c1.2-3.6 3.8-5.5 7-5.5s5.8 1.9 7 5.5"/><path d="M17 4.5l2-1.5M19.5 7.5h2"/></svg><h3>Get personal style advice</h3><p>A question about style or fit? Chat with us or book an appointment in store.</p><a class="u" href="#store">Ask a style expert</a></div>
+    <div><svg class="i" viewBox="0 0 24 24"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17.5" cy="17.5" r="1.8"/></svg><h3>Free shipping &amp; returns</h3><p>Free shipping on every order, or collect it from your nearest store.</p><a class="u" href="#store">Learn more</a></div>
+    <div><svg class="i" viewBox="0 0 24 24"><path d="M4 20L20 4M6 6l3 3M4 10l2 2M10 4l2 2M14 18l2 2M18 14l2 2"/></svg><h3>Get your perfect fit</h3><p>In-store alterations, ready in 30 minutes to 3 days.</p><a class="u" href="#store">Learn more</a></div>
+  </section>
+  <section class="f-sub"><h3>Get the latest on products and styling</h3><form id="subForm" novalidate><input id="subEmail" type="email" placeholder="Email address" aria-label="Email address"><button type="submit">Subscribe</button></form></section>
+  <section class="f-links">
+    <div><h4>Contact</h4><dl><dt>WhatsApp</dt><dd>+1 212 555 0148</dd><dt>Call (free)</dt><dd>+1 800 555 0192</dd><dt>Email</dt><dd>service@rixance.example</dd></dl></div>
+    <div><h4>Shop by</h4><ul><li><a href="#c-suits">Suits</a></li><li><a href="#c-knitwear">Knitwear &amp; Sweaters</a></li><li><a href="#c-jackets">Jackets &amp; Blazers</a></li><li><a href="#c-pants">Pants</a></li><li><a href="#c-coats">Coats</a></li><li><a href="#c-shoes">Shoes</a></li></ul></div>
+    <div><h4>Support</h4><ul><li><a href="#store">Shipping &amp; Delivery</a></li><li><a href="#store">Returns &amp; Exchanges</a></li><li><a href="#store">Fit Guides</a></li><li><a href="#store">FAQ</a></li><li><a href="#store">Terms &amp; Conditions</a></li><li><a href="#store">Accessibility</a></li></ul></div>
+    <div><h4>Services</h4><ul><li><a href="#store">Plan Your Visit</a></li><li><a href="#c-suits">Custom Suits</a></li><li><a href="#store">Alterations</a></li><li><a href="#store">Size Profile</a></li><li><a href="#store">Gift Cards</a></li></ul></div>
+    <div><h4>About</h4><ul><li><a href="#store">Store Experience</a></li><li><a href="#store">Our Story</a></li><li><a href="#store">Press</a></li><li><a href="#store">Sustainability</a></li><li><a href="#store">Careers</a></li></ul></div>
+  </section>
+  <div class="f-brand"><span class="wm" aria-hidden="true"></span><span class="mk" aria-hidden="true"></span><span class="sr">Rixance</span></div>
+  <div class="f-pattern" aria-hidden="true"></div>
+  <div class="f-legal"><span>US · English</span><div><a href="#store">Privacy</a><a href="#store">Terms</a><span>© 2026 Rixance (demo)</span></div></div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const money=n=>"$"+n.toLocaleString("en-US");
+const J=["36R","38R","40R","42R","44R","46R"], T=["S","M","L","XL","XXL"], W=["30","32","34","36","38"];
+
+// ---------- catalogue ----------
+const P=[
+  {id:"olive-double-breasted-suit",n:"Double-Breasted Suit",c:"Olive",hex:"#4b5140",m:"Olive · Wool-Linen Twill · Biella, Italy",p:949,img:"suits-green-db",cat:"suits",tag:"New",s:J,fit:"Tailored fit",o:"30% 40%",
+   d:"A soft double-breasted suit with peak lapels and a six-on-two button stance. The wool-linen twill keeps its shape through the day and breathes in warmer rooms.",canvas:"Half canvas",cloth:"Medium-weight wool-linen twill with a dry, matte hand."},
+  {id:"tailored-black-suit",n:"Tailored Fit Black Suit",c:"Black",hex:"#16181c",m:"Black · Pure S120's Wool · Biella, Italy",p:899,img:"suits-black",cat:"suits",tag:"Rixance Signature",s:J,fit:"Tailored fit",o:"50% 30%",
+   d:"Our signature black suit: natural shoulders, a clean chest and flat-front trousers. Worn with a knit for evenings or a white shirt for the office.",canvas:"Half canvas",cloth:"Fine S120's wool with a smooth, quiet finish."},
+  {id:"herringbone-wool-jacket",n:"Herringbone Wool Jacket",c:"Tobacco",hex:"#7a5a3e",m:"Tobacco · Wool-Cashmere Herringbone · Biella, Italy",p:699,img:"p03",cat:"jackets",tag:"New",s:J,fit:"Tailored fit",o:"50% 40%",
+   d:"An unstructured sport jacket in a soft herringbone, finished with a leather hanging loop. Made to layer over knitwear through the cold months.",canvas:"Unconstructed",cloth:"Wool and cashmere herringbone with a brushed surface."},
+  {id:"houndstooth-wool-jacket",n:"Houndstooth Wool Jacket",c:"Brown",hex:"#8c6f55",m:"Brown · Wool-Alpaca Houndstooth · Biella, Italy",p:649,img:"p01",cat:"jackets",tag:"New",s:J,fit:"Relaxed fit",
+   d:"A relaxed, single-breasted jacket in a small-scale houndstooth. Patch pockets and a soft shoulder keep it easy over a roll neck.",canvas:"Unconstructed",cloth:"Lofty wool and alpaca with a warm, open weave."},
+  {id:"soft-wool-blazer",n:"Soft Wool Blazer",c:"Dark Brown",hex:"#3e3129",m:"Dark Brown · Wool Twill · Unlined",p:649,img:"p12",cat:"jackets",tag:"New",s:J,fit:"Tailored fit",
+   d:"An unlined blazer in dark brown twill. Light enough to wear year-round, refined enough for a tie.",canvas:"Unlined",cloth:"Dense wool twill with a subtle sheen."},
+  {id:"ivory-double-breasted-jacket",n:"Double-Breasted Jacket",c:"Ivory",hex:"#ece7dc",m:"Ivory · Wool-Silk Blend · Como, Italy",p:749,img:"ivory-db",cat:"jackets",s:J,fit:"Tailored fit",
+   d:"An ivory double-breasted jacket with mother-of-pearl buttons. Pair it with cream knitwear and tonal trousers for a calm, light look.",canvas:"Half canvas",cloth:"Wool and silk blend with a gentle slub."},
+  {id:"raw-silk-shirt-jacket",n:"Raw Silk Shirt Jacket",c:"Off-White",hex:"#e9e3d4",m:"Off-White · Raw Silk · Como, Italy",p:549,img:"linen-garden",extra:"silk-seated",cat:"jackets",s:T,fit:"Relaxed fit",o:"50% 25%",
+   d:"A camp-collar shirt jacket in raw silk, cut long and loose. Wear it open over a tee or buttoned as a shirt.",canvas:"Unlined",cloth:"Textured raw silk with natural slubs."},
+  {id:"camel-overcoat",n:"Double-Breasted Overcoat",c:"Camel",hex:"#b88f62",m:"Camel · Pure Camel Hair · Biella, Italy",p:1199,img:"coat-camel",cat:"coats",tag:"New",s:J,fit:"Regular fit",
+   d:"A double-breasted overcoat in pure camel hair, with peak lapels and jetted flap pockets. Long enough to cover a jacket, light enough to carry.",canvas:"Half canvas",cloth:"Pure camel hair, brushed for warmth without bulk."},
+  {id:"suede-overshirt",n:"Suede Overshirt",c:"Dark Brown",hex:"#4a3326",m:"Dark Brown · Goat Suede",p:699,img:"p07",cat:"coats",tag:"New",s:T,fit:"Regular fit",
+   d:"A suede overshirt with two chest pockets and horn buttons. Layer it over a knit or under a coat.",canvas:"Unlined",cloth:"Soft goat suede with a fine nap."},
+  {id:"suede-shearling-collar-jacket",n:"Suede Jacket, Shearling Collar",c:"Rust",hex:"#93502d",m:"Rust · Lamb Suede · Shearling Collar",p:999,img:"p09",cat:"coats",s:T,fit:"Regular fit",
+   d:"A rust suede jacket with a removable shearling collar and zip front. A considered alternative to the overcoat.",canvas:"Quilted lining",cloth:"Lamb suede with a shearling collar."},
+  {id:"suede-bomber",n:"Suede Bomber",c:"Tobacco",hex:"#7c4a2c",m:"Tobacco · Goat Suede",p:899,img:"p11",cat:"coats",s:T,fit:"Regular fit",
+   d:"A clean suede bomber with a concealed zip and ribbed cuffs. Pairs with pleated trousers as easily as denim.",canvas:"Cupro lining",cloth:"Goat suede, soft and light."},
+  {id:"cashmere-overshirt",n:"Cashmere Overshirt",c:"Olive",hex:"#5a5a40",m:"Olive · Pure Cashmere",p:599,img:"p08",cat:"coats",s:T,fit:"Regular fit",
+   d:"A soft cashmere overshirt in deep olive. Worn with a scarf over the shoulders on cooler days.",canvas:"Unlined",cloth:"Pure cashmere in a compact weave."},
+  {id:"field-jacket",n:"Field Jacket",c:"Olive",hex:"#4d4a38",m:"Olive · Brushed Wool · Prato, Italy",p:599,img:"p02",cat:"coats",s:T,fit:"Regular fit",
+   d:"A four-pocket field jacket in brushed wool, with a hidden placket.",canvas:"Unlined",cloth:"Brushed wool with a soft, matte face."},
+  {id:"wool-zip-jacket",n:"Wool Zip Jacket",c:"Light Gray",hex:"#a7adb1",m:"Light Gray · Double-Faced Wool",p:549,img:"p05",cat:"coats",s:T,fit:"Regular fit",
+   d:"A minimal zip jacket in double-faced wool, with a stand collar.",canvas:"Unlined",cloth:"Double-faced wool, finished by hand at the seams."},
+  {id:"jacquard-shawl-cardigan",n:"Jacquard Shawl Cardigan",c:"Brown",hex:"#5b3d2a",m:"Brown · Wool-Mohair Jacquard",p:389,img:"p04",cat:"knitwear",s:T,fit:"Relaxed fit",
+   d:"A chunky shawl-collar cardigan with an all-over jacquard. Belongs over a flannel shirt.",canvas:"Knit",cloth:"Wool and mohair in a heavy gauge."},
+  {id:"pleated-flannel-pants",n:"Pleated Flannel Pants",c:"Stone",hex:"#c9c2b4",m:"Stone · Pure Wool Flannel · Biella, Italy",p:199,img:"p10",cat:"pants",s:W,fit:"Wide fit",
+   d:"Single-pleated trousers in soft flannel with side adjusters and a wide leg.",canvas:"Half-lined",cloth:"Pure wool flannel, brushed."},
+  {id:"five-pocket-cotton-pants",n:"Five-Pocket Cotton Pants",c:"Sand",hex:"#d8ccb5",m:"Sand · Brushed Cotton Twill",p:179,img:"p06",cat:"pants",s:W,fit:"Straight fit",
+   d:"Five-pocket pants in brushed cotton twill. Garment dyed for a soft, lived-in hand.",canvas:"Unlined",cloth:"Brushed cotton twill."},
+  {id:"suede-city-moccasin",n:"City Moccasin",c:"Dark Brown",hex:"#3a2a20",m:"Dark Brown · Suede · Rubber Sole",p:349,img:"suede-moc",cat:"shoes",s:["40","41","42","43","44","45"],fit:"True to size",
+   d:"A hand-stitched suede moccasin on a slim rubber sole. Made in Portugal.",canvas:"Leather lining",cloth:"Calf suede."}
+];
+const byId=Object.fromEntries(P.map(x=>[x.id,x]));
+const C=[
+  {id:"new-arrivals",t:"New Arrivals",h:"New Arrivals",img:"p07",d:"The latest additions to the Rixance wardrobe: soft tailoring, suede and brushed wools for the season ahead. Every piece is designed to work across business, social and weekend settings.",items:()=>P},
+  {id:"suits",t:"Suits",h:"Suits for Men",img:"suits-black",d:"Suits cut with natural shoulders and a clean line, in cloths from Italian mills. From the black signature suit to soft double-breasted cuts, each is half canvassed and altered for free in store."},
+  {id:"jackets",t:"Jackets & Blazers",h:"Jackets & Blazers",img:"p12",d:"Unstructured sport jackets, blazers and shirt jackets that wear easily over knitwear or a shirt."},
+  {id:"coats",t:"Coats & Outerwear",h:"Coats & Outerwear",img:"coat-camel",d:"Overcoats, suede jackets and overshirts in camel hair, cashmere and suede."},
+  {id:"knitwear",t:"Knitwear & Sweaters",h:"Knitwear & Sweaters",img:"p04",d:"Cardigans and sweaters in wool, mohair and cashmere."},
+  {id:"pants",t:"Pants",h:"Pants",img:"p10",d:"Pleated flannels and five-pocket cottons, cut to sit at the natural waist."},
+  {id:"shoes",t:"Shoes",h:"Shoes",img:"suede-moc",d:"Suede moccasins and loafers to finish a tailored look."}
+];
+C.forEach(c=>{ if(!c.items) c.items=()=>P.filter(x=>x.cat===c.id); });
+const colById=Object.fromEntries(C.map(c=>[c.id,c]));
+const LIFE={suits:"hero-basting",jackets:"craft-navy",coats:"hero-coat",knitwear:"bw-portrait",pants:"bw-couple",shoes:"bw-portrait"};
+const EDITS=[
+  {img:"hero-basting",t:"Made to your measure",s:"Custom Made in four weeks, cut to 28 measurements.",to:"#c-suits",cta:"Discover Custom Made"},
+  {img:"bw-portrait",t:"Refined, never loud",s:"Pieces built to be worn for years, not seasons.",to:"#c-new-arrivals",cta:"Shop New Arrivals"},
+  {img:"craft-navy",t:"Finished by hand",s:"Every jacket is pressed and checked by our tailors before it leaves the atelier.",to:"#c-jackets",cta:"Shop Jackets"}
+];
+
+// ---------- product card renderers ----------
+const qaHtml=(x)=>`<div class="qa"><span>Quick add</span><div>${x.s.map(s=>`<button data-add="${x.id}" data-size="${s}" aria-label="Add ${x.n}, size ${s}">${s}</button>`).join("")}</div></div>`;
+const railCard=x=>`<article class="prod"><a class="ph" href="#p-${x.id}"><img src="img/${x.img}.webp" alt="${x.n} in ${x.c.toLowerCase()}" loading="lazy" style="object-position:${x.o||"50% 20%"}">${x.tag?`<span class="tag">${x.tag}</span>`:""}</a>${qaHtml(x)}
+  <div class="meta"><div><h3><a href="#p-${x.id}">${x.n}</a></h3><div class="col">${x.c}</div></div><div class="pr">${money(x.p)}</div></div></article>`;
+function slidesFor(x){ return [{src:x.img,o:x.o},{src:x.img,zoom:"50% 30%"},{src:x.extra||x.img,zoom:x.extra?null:"50% 78%",o:x.o}]; }
+const gridCard=x=>{ const sl=slidesFor(x);
+  return `<article class="card"><div class="slider">${x.tag?`<span class="tag" style="left:16px;top:14px">${x.tag}</span>`:""}
+    <div class="slides">${sl.map((s,i)=>`<a href="#p-${x.id}" class="${s.zoom?"zoom":""}" tabindex="${i?-1:0}" aria-label="${x.n}"><img src="img/${s.src}.webp" alt="${i?"":x.n}" loading="lazy" style="${s.zoom?`--o:${s.zoom}`:`object-position:${s.o||"50% 20%"}`}"></a>`).join("")}</div>
+    <div class="segs">${sl.map((_,i)=>`<i class="${i?"":"on"}"></i>`).join("")}</div>
+    <button class="arr l" data-slide="-1" aria-label="Previous image"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><button class="arr r" data-slide="1" aria-label="Next image"><svg class="i" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div>
+    <div class="info"><div class="t-row"><a href="#p-${x.id}">${x.n}</a><span class="pr">${money(x.p)}</span></div><p class="mat">${x.m}</p><div class="sw"><span style="background:${x.hex}" title="${x.c}"></span></div></div></article>`; };
+const editCard=e=>`<a class="card wide edit" href="${e.to}"><img src="img/${e.img}.webp" alt="" loading="lazy"><div><h3>${e.t}</h3><p>${e.s}</p><span class="u">${e.cta}</span></div></a>`;
+
+// home rail
+$("#homeRail").innerHTML=P.filter(x=>x.tag).concat(P.filter(x=>!x.tag)).slice(0,12).map(railCard).join("");
+document.addEventListener("click",e=>{ const b=e.target.closest("[data-rail]"); if(!b) return; const t=b.closest(".rail").querySelector(".rail-track"); t.scrollBy({left:+b.dataset.rail*t.clientWidth*.75,behavior:"smooth"}); });
+
+// ---------- collection view ----------
+const fState={sort:"rec",colours:new Set()};
+let curCol=null;
+function renderCollection(id){
+  const c=colById[id]||colById["new-arrivals"]; curCol=c;
+  $("#catRail").innerHTML=C.map(k=>`<a href="#c-${k.id}" ${k.id===c.id?'aria-current="page"':""}><div class="ci"><img src="img/${k.img}.webp" alt="" loading="lazy"></div><p>${k.t}</p></a>`).join("");
+  $("#cTitle").textContent=c.h;
+  const short=c.d.length>110; const cut=c.d.slice(0,c.d.indexOf(" ",90)>0?c.d.indexOf(" ",90):110);
+  $("#cDesc").innerHTML=short?`<span>${cut}…</span> <button id="readMore">Read more</button>`:c.d;
+  if(short) $("#readMore").onclick=()=>{ $("#cDesc").textContent=c.d; };
+  drawGrid(); renderFilterSheet();
+  document.title=`${c.h} | Rixance`;
+}
+function drawGrid(){
+  let list=curCol.items().slice();
+  if(fState.colours.size) list=list.filter(x=>fState.colours.has(x.c));
+  if(fState.sort==="low") list.sort((a,b)=>a.p-b.p);
+  if(fState.sort==="high") list.sort((a,b)=>b.p-a.p);
+  if(fState.sort==="new") list.sort((a,b)=>(b.tag?1:0)-(a.tag?1:0));
+  $("#cCount").textContent=`${list.length} ${list.length===1?"product":"products"}`;
+  if(!list.length){ $("#cGrid").innerHTML=`<p class="empty">No pieces match these filters. <button class="u" id="emptyClear">Clear filters</button></p>`; $("#emptyClear").onclick=clearFilters; return; }
+  let html="", e=0;
+  list.forEach((x,i)=>{ html+=gridCard(x); if((i+1)%4===0 && i<list.length-1) html+=editCard(EDITS[e++%EDITS.length]); });
+  if(list.length<4) html+=editCard(EDITS[0]);
+  $("#cGrid").innerHTML=html;
+}
+function renderFilterSheet(){
+  const opts=[["rec","Recommended"],["new","Newest"],["low","Price: low to high"],["high","Price: high to low"]];
+  $("#sortOpts").innerHTML=opts.map(([v,l])=>`<label><input type="radio" name="sort" value="${v}" ${fState.sort===v?"checked":""}>${l}</label>`).join("");
+  const cols=[...new Map(curCol.items().map(x=>[x.c,x.hex])).entries()];
+  $("#colourOpts").innerHTML=cols.map(([n,h])=>`<button aria-pressed="${fState.colours.has(n)}" data-colour="${n}"><i style="background:${h}"></i>${n}</button>`).join("");
+  const n=filteredCount(); $("#applyF").textContent=`Show ${n} ${n===1?"product":"products"}`;
+}
+const filteredCount=()=>curCol.items().filter(x=>!fState.colours.size||fState.colours.has(x.c)).length;
+$("#sortOpts").addEventListener("change",e=>{ fState.sort=e.target.value; drawGrid(); });
+$("#colourOpts").addEventListener("click",e=>{ const b=e.target.closest("[data-colour]"); if(!b) return; const n=b.dataset.colour; fState.colours.has(n)?fState.colours.delete(n):fState.colours.add(n); drawGrid(); renderFilterSheet(); });
+function clearFilters(){ fState.sort="rec"; fState.colours.clear(); drawGrid(); renderFilterSheet(); }
+$("#clearF").onclick=clearFilters;
+$("#filterBtn").onclick=$("#floatFilter").onclick=()=>open($("#filters"));
+// card image sliders
+$("#cGrid").addEventListener("click",e=>{ const b=e.target.closest("[data-slide]"); if(!b) return; const s=b.closest(".slider").querySelector(".slides"); s.scrollBy({left:+b.dataset.slide*s.clientWidth,behavior:"smooth"}); });
+$("#cGrid").addEventListener("scroll",e=>{ const s=e.target; if(!s.classList||!s.classList.contains("slides")) return; const i=Math.round(s.scrollLeft/s.clientWidth); s.parentElement.querySelectorAll(".segs i").forEach((d,k)=>d.classList.toggle("on",k===i)); },true);
+
+// ---------- product view ----------
+let curP=null;
+function renderProduct(id){
+  const x=byId[id]||P[0]; curP=x;
+  const g=[{src:x.img,cls:"big first",o:x.o},{src:x.img,cls:"small zoom",zoom:"50% 28%"},{src:LIFE[x.cat]===x.img?"craft-navy":(x.extra||LIFE[x.cat]),cls:"big"},{src:x.img,cls:"small zoom",zoom:"50% 80%"},{src:x.img,cls:"big zoom",zoom:"40% 55%",z:1.5}];
+  $("#gal").innerHTML=g.map((f,i)=>`<figure class="${f.cls}"><img src="img/${f.src}.webp" alt="${i?`${x.n}, view ${i+1}`:`${x.n} in ${x.c.toLowerCase()}`}" ${i>1?'loading="lazy"':""} style="${f.zoom?`--o:${f.zoom};${f.z?`--z:${f.z}`:""}`:`object-position:${f.o||"50% 20%"}`}"></figure>`).join("");
+  $("#gal").scrollLeft=0; $("#galCount").textContent=`1 / ${g.length}`;
+  const sib=P.filter(y=>y.cat===x.cat).slice(0,6);
+  $("#buy").innerHTML=`${x.tag?`<div class="badge">${x.tag}</div>`:""}
+    <h1>${x.n}</h1><p class="mat">${x.m}</p><div class="price">${money(x.p)}</div>
+    <div class="clabel">Colour: <b>${x.c}</b></div>
+    <div class="thumbs">${sib.map(y=>`<a href="#p-${y.id}" aria-current="${y.id===x.id}" title="${y.n}, ${y.c}"><img src="img/${y.img}.webp" alt="${y.n}, ${y.c}" loading="lazy"></a>`).join("")}</div>
+    <div class="ctas" id="mainCtas"><button class="btn line" data-custom>Customize</button><button class="btn dark" data-size-open>Select size</button></div>
+    <div class="ship"><svg class="i" viewBox="0 0 24 24"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17.5" cy="17.5" r="1.8"/></svg>Free delivery in 3 – 6 business days</div>
+    <details class="acc"><summary>Size &amp; Fit</summary><div class="ab"><dl><dt>Fit</dt><dd>${x.fit}</dd><dt>Model</dt><dd>187 cm, wears ${x.s[2]||x.s[0]}</dd><dt>Sizes</dt><dd>${x.s.join(", ")}</dd></dl></div></details>
+    <details class="acc"><summary>Details &amp; Care</summary><div class="ab"><dl><dt>Construction</dt><dd>${x.canvas}</dd><dt>Cloth</dt><dd>${x.m.split(" · ").slice(1).join(" · ")}</dd><dt>Care</dt><dd>Dry clean only. Brush and air between wears.</dd></dl></div></details>
+    <details class="acc"><summary>Delivery &amp; Returns</summary><div class="ab">Free delivery on every order. Returns are free within 30 days, unworn and unaltered, by mail or in any Rixance store.</div></details>
+    <div class="pdesc"><p>${x.d}</p><p><b>${x.canvas}</b>${x.canvas==="Half canvas"?"A floating canvas through the chest that moulds to you over time for a natural shape.":"Built light, with minimal interlining, so it moves with you."}</p><p><b>The cloth</b>${x.cloth}</p></div>`;
+  const rel=P.filter(y=>y.id!==x.id&&y.cat===x.cat).concat(P.filter(y=>y.cat!==x.cat)).slice(0,10);
+  $("#pdpRail").innerHTML=rel.map(railCard).join("");
+  $("#pdpRail").scrollLeft=0;
+  document.title=`${x.n} in ${x.c} | Rixance`;
+}
+$("#gal").addEventListener("scroll",()=>{ const g=$("#gal"); if(g.scrollWidth<=g.clientWidth+2) return; $("#galCount").textContent=`${Math.round(g.scrollLeft/g.clientWidth)+1} / ${g.children.length}`; },{passive:true});
+function openSizes(x){ $("#sizeFor").textContent=`${x.n} · ${x.c}`; $("#sizeList").innerHTML=x.s.map((s,i)=>`<button data-add="${x.id}" data-size="${s}"><span>${s}</span>${i===x.s.length-1?'<span class="low">Only 2 left</span>':""}</button>`).join(""); open($("#sizes")); }
+document.addEventListener("click",e=>{
+  if(e.target.closest("[data-size-open]")&&curP) openSizes(curP);
+  if(e.target.closest("[data-custom]")) toast("Custom Made is not connected in this demo");
+});
+
+// ---------- bag ----------
+const bag=[];
+function renderBag(){
+  const n=bag.length; $("#bagCount").dataset.n=n; $("#bagCount").textContent=n;
+  $("#bagBody").innerHTML=n?bag.map((x,i)=>`<div class="bag-line"><img src="img/${x.img}.webp" alt=""><div><div style="font-weight:500">${x.n}</div><div class="col">${x.c} · Size ${x.size}</div><button data-rm="${i}">Remove</button></div><span class="pr">${money(x.p)}</span></div>`).join("")
+    :`<p class="bag-empty">Your bag is empty. <a class="u" href="#c-new-arrivals" data-close>Shop new arrivals</a></p>`;
+  $("#bagFoot").hidden=!n; $("#bagTotal").textContent=money(bag.reduce((a,b)=>a+b.p,0));
+}
+renderBag();
+document.addEventListener("click",e=>{
+  const a=e.target.closest("[data-add]"); if(a){ const x=byId[a.dataset.add]; bag.push({...x,size:a.dataset.size}); renderBag(); if(a.closest("#sizes")) open($("#bag")); else toast(`Added ${x.n}, size ${a.dataset.size}`); return; }
+  const r=e.target.closest("[data-rm]"); if(r){ bag.splice(+r.dataset.rm,1); renderBag(); }
+});
+$("#checkout").onclick=()=>toast("Checkout is not connected in this demo");
+
+// ---------- menu ----------
+const MENU=[
+  {t:"New Arrivals",href:"#c-new-arrivals"},
+  {t:"Clothing",groups:[["",[["Suits","suits"],["Pants","pants"],["Knitwear & Sweaters","knitwear"],["Coats & Vests","coats"],["Jackets & Blazers","jackets"],["Tuxedos","suits"],["Shirts","jackets"],["Polos & T-Shirts","knitwear"]]]]},
+  {t:"Shoes",groups:[["",[["All Shoes","shoes"],["Loafers & Slip-ons","shoes"],["Oxfords & Derbies","shoes"],["Sneakers","shoes"],["Boots","shoes"]]]]},
+  {t:"Accessories",groups:[["",[["All Accessories","new-arrivals"],["Ties & Bow Ties","new-arrivals"],["Pocket Squares","new-arrivals"],["Belts","new-arrivals"],["Socks","new-arrivals"],["Scarves","new-arrivals"]]]]},
+  {t:"Custom Made",groups:[["Tailoring",[["Custom Suits","suits"],["Custom Jackets","jackets"],["Custom Pants","pants"],["Custom Coats","coats"]]],["Evening",[["Custom Tuxedo Suits","suits"],["Custom Tuxedo Jackets","jackets"]]],["Highlights",[["How It Works","suits"]]]]},
+  {t:"Collections",coll:[["Winter Highlights","Deep tones and brushed cloths for the cold months.","coats"],["Transitional Essentials","Light layers in neutral shades that work across seasons.","jackets"],["Cashmere Collection","Soft cashmere pieces, warm without the weight.","coats"],["Signature Suits","The Rixance black suit and its companions.","suits"],["Ivory & Raw Silk","Light tailoring for warm evenings.","jackets"]]},
+  {t:"Occasion",groups:[["",[["Wedding","suits"],["Black Tie","suits"],["Business","suits"],["Smart Casual","jackets"],["Travel","coats"]]]]},
+  {t:"Stores",href:"#store"},{t:"Gift Cards",href:"#store"}
+];
+const chev='<svg class="i" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>';
+const levels=$("#levels");
+$("#mTop").innerHTML=MENU.map((m,i)=>m.href?`<a href="${m.href}" data-close>${m.t}</a>`:`<button data-open="${i}">${m.t}${chev}</button>`).join("");
+MENU.forEach((m,i)=>{ if(m.href) return;
+  const d=document.createElement("div"); d.className="level sub"; d.id="lvl-"+i;
+  let h=`<button class="back" data-back><svg class="i" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M15 5l-7 7 7 7"/></svg>Back</button><h3>${m.t}</h3>`;
+  if(m.groups) h+=m.groups.map(([g,its])=>(g?`<div class="grp">${g}</div>`:"")+`<ul>${its.map(([l,c])=>`<li><a href="#c-${c}" data-close>${l}</a></li>`).join("")}</ul>`).join("");
+  if(m.coll) h+=`<div class="coll">${m.coll.map(([n,s,c])=>`<a href="#c-${c}" data-close><b>${n}</b><span>${s}</span></a>`).join("")}</div>`;
+  d.innerHTML=h; levels.appendChild(d); });
+levels.addEventListener("click",e=>{ const o=e.target.closest("[data-open]"); if(o){ $("#lvl-"+o.dataset.open).classList.add("on"); return; } if(e.target.closest("[data-back]")) levels.querySelectorAll(".level.sub.on").forEach(l=>l.classList.remove("on")); });
+$("#mSearch").addEventListener("keydown",e=>{ if(e.key!=="Enter") return; const q=e.target.value.trim().toLowerCase(); if(!q) return;
+  const hit=P.find(x=>(x.n+" "+x.c+" "+x.m).toLowerCase().includes(q)); if(hit){ closeAll(); location.hash="p-"+hit.id; } else toast(`No pieces match "${e.target.value.trim()}"`); });
+
+// ---------- sheets + header ----------
+const hdr=$("#hdr"), scrim=$("#scrim"); let sheetOpen=false, view="home";
+function open(s){ closeAll(true); s.classList.add("on"); s.setAttribute("aria-hidden","false"); scrim.classList.add("on"); sheetOpen=true; setHeader(); if(s.id==="menu") $("#menuBtn").setAttribute("aria-expanded","true"); }
+function closeAll(keep){ $$(".sheet.on").forEach(s=>{s.classList.remove("on");s.setAttribute("aria-hidden","true")}); levels.querySelectorAll(".level.sub.on").forEach(l=>l.classList.remove("on")); if(!keep){ scrim.classList.remove("on"); sheetOpen=false; setHeader(); } $("#menuBtn").setAttribute("aria-expanded","false"); }
+$("#menuBtn").onclick=()=>open($("#menu"));
+$("#searchBtn").onclick=()=>{ open($("#menu")); setTimeout(()=>$("#mSearch").focus(),350); };
+$("#bagBtn").onclick=()=>open($("#bag"));
+scrim.onclick=()=>closeAll();
+document.addEventListener("click",e=>{ if(e.target.closest("[data-close]")) closeAll(); });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeAll(); });
+const setHeader=()=>hdr.classList.toggle("is-white", sheetOpen || view!=="home" || scrollY>innerHeight*.75);
+
+let tt; function toast(m){ const t=$("#toast"); t.textContent=m; t.classList.add("on"); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove("on"),2400); }
+$("#acctBtn").onclick=()=>toast("Accounts are not connected in this demo");
+$("#subForm").addEventListener("submit",e=>{ e.preventDefault(); const v=$("#subEmail").value.trim(); toast(/\S+@\S+\.\S+/.test(v)?"Thanks. This demo does not store emails.":"Enter an email like name@example.com"); });
+
+// ---------- router (bare #tokens: home, c-<collection>, p-<product>, or a section id) ----------
+function route(){
+  const h=decodeURIComponent(location.hash.slice(1));
+  closeAll();
+  let next="home";
+  if(h.startsWith("c-")){ next="collection"; renderCollection(h.slice(2)); }
+  else if(h.startsWith("p-")){ next="product"; renderProduct(h.slice(2)); }
+  else document.title="Rixance Menswear";
+  view=next;
+  $("#v-home").hidden=next!=="home"; $("#v-collection").hidden=next!=="collection"; $("#v-product").hidden=next!=="product";
+  $("#floatFilter").classList.remove("on"); $("#mbar").classList.remove("on");
+  const target=h && !/^[cp]-/.test(h) && h!=="home" ? document.getElementById(h) : null;
+  if(target) target.scrollIntoView({behavior:"instant"}); else scrollTo({top:0,behavior:"instant"});
+  onScroll();
+}
+addEventListener("hashchange",route);
+
+// ---------- scroll effects ----------
+const story=$("#story"), move=$("#storyMove"), reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+let ticking=false;
+function onScroll(){
+  ticking=false; setHeader();
+  if(view==="home" && !reduce){ const r=story.getBoundingClientRect(), vh=innerHeight; const p=Math.min(1,Math.max(0,(vh-r.top)/(vh+r.height*.5))); move.style.transform=`translateY(${(-250*(1-p)).toFixed(1)}px)`; }
+  if(view==="collection"){ const b=$("#filterBtn").getBoundingClientRect(); $("#floatFilter").classList.toggle("on", b.bottom < 52); }
+  if(view==="product"){ const c=$("#mainCtas"); if(c){ const r=c.getBoundingClientRect(); $("#mbar").classList.toggle("on", r.bottom<52 && innerWidth<1024); } }
+}
+addEventListener("scroll",()=>{ if(!ticking){ ticking=true; requestAnimationFrame(onScroll); } },{passive:true});
+addEventListener("resize",onScroll);
+route();
+</script>
