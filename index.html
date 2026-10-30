@@ -52,11 +52,16 @@ header.site.is-ink::before{opacity:0}
 
 /* ---------- photo scenes (home) ---------- */
 .scene{position:absolute;inset:0;overflow:hidden;background:var(--navy)}
-.scene::after{content:"";position:absolute;left:0;right:0;bottom:0;height:24%;background:linear-gradient(transparent,rgba(20,22,28,.4))}
+.scene::after{content:"";position:absolute;z-index:2;left:0;right:0;bottom:0;height:24%;background:linear-gradient(transparent,rgba(20,22,28,.4))}
 .scene img{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:50% 20%}
 .scene.duo .duo-2{display:none}
 @media (min-width:1024px){.scene.duo img{width:50%}.scene.duo .duo-2{display:block;left:50%}}
 
+/* hero video: Vimeo background player sized to cover; stays hidden (photos show) until Vimeo reports it is playing */
+.hero-video{position:absolute;inset:0;z-index:1;overflow:hidden;opacity:0;transition:opacity .8s ease;pointer-events:none}
+.hero-video.on{opacity:1}
+.hero-video iframe{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border:0;width:max(100%,177.78dvh);height:max(100dvh,56.25vw)}
+.hero-video.portrait iframe{width:max(100%,56.25dvh);height:max(100dvh,177.78vw)}
 .hero{position:relative;isolation:isolate;min-height:100dvh}
 .hero-stick{position:sticky;top:0;z-index:1;height:100dvh;overflow:hidden}
 .hero-index{position:relative;z-index:2;width:fit-content;max-width:100%;overflow-wrap:anywhere;padding:0 var(--gr) 20px var(--gl);margin-top:calc(-1 * (var(--lh) + 20px));--lh:clamp(36px,4.2vw,56px)}
@@ -396,6 +401,7 @@ footer{background:var(--navy);color:var(--white)}
       <div class="scene duo">
         <img src="img/hero-coat.webp" alt="Man in a long black overcoat in front of a stone facade" style="object-position:50% 30%">
         <img src="img/hero-basting.webp" alt="Basted jacket front with white tailor's chalk lines" class="duo-2">
+        <div class="hero-video" id="heroVideo" aria-hidden="true"></div>
       </div>
     </div>
     <nav class="hero-index" aria-label="Shop categories">
@@ -766,5 +772,26 @@ function onScroll(){
 }
 addEventListener("scroll",()=>{ if(!ticking){ ticking=true; requestAnimationFrame(onScroll); } },{passive:true});
 addEventListener("resize",onScroll);
+
+// ---------- hero video (Vimeo): wide cut on desktop, tall cut on phones ----------
+const VIDEO={wide:"1239474758",tall:"1239474757"};
+const heroVideo=$("#heroVideo");
+let vidKind=null;
+function loadHeroVideo(){
+  if(reduce) return;
+  const kind=matchMedia("(max-aspect-ratio: 4/5)").matches?"tall":"wide";
+  if(kind===vidKind) return; vidKind=kind;
+  heroVideo.classList.remove("on"); heroVideo.classList.toggle("portrait",kind==="tall");
+  heroVideo.innerHTML=`<iframe src="https://player.vimeo.com/video/${VIDEO[kind]}?background=1&autoplay=1&loop=1&muted=1&autopause=0&dnt=1" title="Rixance campaign film" allow="autoplay; fullscreen; picture-in-picture" tabindex="-1"></iframe>`;
+}
+addEventListener("message",e=>{
+  if(!/^https:\/\/player\.vimeo\.com$/.test(e.origin)) return;
+  let d=e.data; try{ if(typeof d==="string") d=JSON.parse(d); }catch{ return; }
+  const f=heroVideo.querySelector("iframe"); if(!f||e.source!==f.contentWindow) return;
+  if(d.event==="ready") f.contentWindow.postMessage(JSON.stringify({method:"addEventListener",value:"play"}),"https://player.vimeo.com");
+  if(d.event==="play"||d.event==="playProgress") heroVideo.classList.add("on");
+});
+let vt; addEventListener("resize",()=>{ clearTimeout(vt); vt=setTimeout(loadHeroVideo,300); });
+loadHeroVideo();
 route();
 </script>
