@@ -36,6 +36,8 @@ header.site::before{content:"";position:absolute;inset:0 0 auto;height:110px;bac
 @media (hover:hover){header.site:hover{background:var(--white);color:var(--navy)}header.site:hover::before{opacity:0}}
 header.site.is-white{background:var(--white);color:var(--navy);box-shadow:0 1px 0 var(--line)}
 header.site.is-white::before{opacity:0}
+header.site.is-ink{background:transparent;color:var(--navy);box-shadow:none}
+header.site.is-ink::before{opacity:0}
 .h-left,.h-right{display:flex;align-items:center;gap:4px}
 .h-right{justify-content:flex-end}
 .ib{width:36px;height:36px;display:grid;place-items:center;position:relative}
@@ -160,8 +162,8 @@ header.site.is-white::before{opacity:0}
 
 /* ---------- product page ---------- */
 .pdp{display:grid;grid-template-columns:1fr;gap:0}
-@media (min-width:1024px){.pdp{grid-template-columns:minmax(0,1fr) min(466px,38vw);gap:56px;padding-right:var(--gr)}}
-.gal{display:flex;flex-direction:column;gap:44px;padding-bottom:44px}
+@media (min-width:1024px){#v-product.page{padding-top:0}.pdp{grid-template-columns:59.4% minmax(0,1fr);gap:0}}
+.gal{display:flex;flex-direction:column;gap:40px;padding-bottom:40px}
 .gal figure{margin:0;position:relative;overflow:hidden;background:var(--paper);max-width:100%}
 .gal .big{width:100%;aspect-ratio:3/4.15}
 .gal .big.first{aspect-ratio:5/9}
@@ -176,38 +178,61 @@ header.site.is-white::before{opacity:0}
   .gal-wrap{position:relative}
   .gal-count{display:block;position:absolute;right:var(--gr);bottom:14px;background:rgba(255,255,255,.9);padding:3px 10px;font-size:12px;font-variant-numeric:tabular-nums;border-radius:999px}
 }
-.buy{padding:28px var(--gr) 40px var(--gl)}
-@media (min-width:1024px){.buy{position:sticky;top:calc(var(--hh) + env(safe-area-inset-top,0px));align-self:start;padding:48px 0 40px;max-height:calc(100dvh - var(--hh));overflow:auto;scrollbar-width:thin}}
-.buy .badge{font-size:13px;font-weight:500;color:var(--olive)}
-.buy h1{font-size:clamp(22px,2vw,28px);letter-spacing:-.02em;line-height:1.15;margin:6px 0 6px}
-.buy .mat{color:var(--grey);margin:0}
-.buy .price{font-size:18px;margin:14px 0 22px;font-variant-numeric:tabular-nums;font-weight:400}
-.buy .clabel{font-size:13px;margin-bottom:8px}
-.buy .clabel b{font-weight:500}
-.thumbs{display:flex;gap:6px;margin-bottom:26px;flex-wrap:wrap}
-.thumbs a{width:66px;height:66px;background:var(--paper);overflow:hidden;outline:1px solid transparent;outline-offset:2px}
-.thumbs a[aria-current="true"]{outline-color:var(--navy)}
-.thumbs img{width:100%;height:100%;object-fit:cover;object-position:50% 25%}
-.ctas{display:grid;grid-template-columns:1fr 1.4fr;gap:8px}
-.btn{height:48px;display:grid;place-items:center;font-weight:500;border:1px solid var(--navy)}
+/* buy panel: quiet 356px column, centred in the right-hand area, sticky for the full viewport height */
+.buy{padding:24px var(--gr) 40px var(--gl);font-size:14px;line-height:20px}
+.buy-in{width:100%}
+@media (min-width:1024px){
+  .buy{position:sticky;top:0;align-self:start;height:100vh;height:100dvh;padding:calc(var(--hh) + 24px) 0 24px;display:flex;align-items:center;justify-content:center;overflow:auto;scrollbar-width:none}
+  .buy::-webkit-scrollbar{display:none}
+  .buy-in{width:min(356px,calc(100% - 64px));margin:auto 0}
+}
+.buy .badge{font-size:12px;line-height:16px;color:var(--olive);margin-bottom:6px}
+.buy .t-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px}
+.buy h1{font-size:16px;line-height:24px;font-weight:500;letter-spacing:0;margin:0}
+.buy .price{font-size:16px;line-height:24px;font-weight:300;font-variant-numeric:tabular-nums;white-space:nowrap}
+.buy .mat{margin:0;font-size:14px;line-height:20px;color:var(--navy)}
+.thumbs{display:flex;gap:4px;margin:16px 0 20px;flex-wrap:wrap}
+.thumbs a{width:68px;height:68px;padding:1px;border-radius:4px;background:var(--paper);border:.8px solid var(--paper);overflow:hidden}
+.thumbs a[aria-current="true"]{border-color:var(--navy)}
+.thumbs a:hover{border-color:var(--stone)}
+.thumbs img{width:100%;height:100%;object-fit:cover;object-position:50% 25%;border-radius:3px}
+.ctas{display:grid;grid-template-columns:1fr;gap:8px}
+.ctas.two{grid-template-columns:1fr 1fr}
+.btn{height:44px;display:grid;place-items:center;font-weight:300;font-size:14px;border-radius:4px;border:1px solid var(--navy);transition:background .2s,border-color .2s}
 .btn.dark{background:var(--navy);color:var(--white)}
 .btn.dark:hover{background:var(--olive);border-color:var(--olive)}
 .btn.line:hover{background:var(--paper)}
-.ship{display:flex;align-items:center;gap:8px;margin:16px 0 22px;font-size:13px}
-.ship svg.i{width:18px;height:18px}
-details.acc{border-top:1px solid var(--line)}
-details.acc:last-of-type{border-bottom:1px solid var(--line)}
-details.acc summary{list-style:none;display:flex;justify-content:space-between;align-items:center;padding:16px 0;font-weight:500;cursor:pointer}
+.btn[disabled]{opacity:.35;cursor:not-allowed}
+.ship{display:flex;align-items:center;justify-content:center;gap:6px;margin:18px 0 20px;font-size:12px;line-height:16px}
+.ship svg.i{width:14px;height:14px;stroke-width:1.6}
+details.acc summary{list-style:none;display:flex;justify-content:space-between;align-items:center;height:36px;cursor:pointer;font-weight:300}
 details.acc summary::-webkit-details-marker{display:none}
-details.acc summary::after{content:"+";font-weight:300;font-size:20px;line-height:1}
-details.acc[open] summary::after{content:"–"}
-details.acc .ab{padding:0 0 18px;color:var(--grey)}
-details.acc dl{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;margin:0}
-details.acc dt{color:var(--navy)}
+details.acc summary svg{width:14px;height:14px;stroke:currentColor;stroke-width:1.2;fill:none;transition:transform .25s}
+details.acc[open] summary svg{transform:rotate(45deg)}
+details.acc .ab{padding:8px 0 20px}
+details.acc .ab>*+*{margin-top:12px}
+details.acc h3{font-size:14px;line-height:20px;font-weight:500;margin:0}
+details.acc ul{margin:8px 0 0;padding-left:16px}
+details.acc li{line-height:24px}
+details.acc p{margin:0}
+details.acc .lnk{text-decoration:underline;text-underline-offset:3px}
+details.acc dl{display:grid;grid-template-columns:1fr 1fr;gap:8px 24px;margin:16px 0 0}
 details.acc dd{margin:0}
-.pdesc{margin-top:26px;display:grid;gap:14px}
-.pdesc p{margin:0}
-.pdesc b{display:block;color:var(--navy)}
+.dr{display:grid;grid-template-columns:20px 1fr;gap:12px;align-items:start}
+.dr svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.3;margin-top:1px}
+/* size sheet */
+#sizes{width:min(570px,100vw)}
+.sz-head{padding:28px 32px 0;display:flex;justify-content:space-between;align-items:baseline}
+.sz-head h2{font-size:16px;font-weight:500;margin:0}
+.sz-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:24px 32px}
+.sz-grid button{height:48px;border:1px solid var(--line);border-radius:4px;font-size:14px;font-weight:300;font-variant-numeric:tabular-nums;position:relative}
+.sz-grid button:hover{border-color:var(--navy)}
+.sz-grid button[aria-pressed="true"]{border-color:var(--navy);box-shadow:inset 0 0 0 1px var(--navy)}
+.sz-grid button small{position:absolute;left:0;right:0;bottom:3px;font-size:10px;line-height:1;color:var(--olive)}
+.sz-note{padding:0 32px;color:var(--grey)}
+.sz-foot{margin-top:auto;padding:20px 32px calc(24px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);display:grid;gap:12px}
+.sz-foot .row-t{font-size:14px}
+@media (max-width:560px){.sz-head,.sz-grid,.sz-note,.sz-foot{padding-left:20px;padding-right:20px}}
 .mbar{position:fixed;left:0;right:0;bottom:0;z-index:35;display:grid;grid-template-columns:1fr 1.4fr;gap:8px;background:var(--white);padding:12px var(--gr) calc(12px + env(safe-area-inset-bottom,0px)) var(--gl);box-shadow:0 -1px 0 var(--line);transform:translateY(100%);transition:transform .5s cubic-bezier(.49,.03,.13,.99)}
 .mbar.on{transform:none}
 @media (min-width:1024px){.mbar{display:none}}
@@ -345,8 +370,14 @@ footer{background:var(--navy);color:var(--white)}
 </aside>
 
 <aside class="sheet right" id="sizes" aria-label="Select size" aria-hidden="true">
-  <div class="sheet-head"><b>Select size</b><button class="ib" data-close aria-label="Close size selection"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
-  <div class="s-body"><p class="col" id="sizeFor" style="margin:16px 0 4px"></p><div class="size-list" id="sizeList"></div><p class="col">Between sizes? Size up. Sleeves and hems are altered for free in store.</p></div>
+  <div class="sheet-head"><b>Select your size</b><button class="ib" data-close aria-label="Close size selection"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="sz-head"><h2 id="sizeFor"></h2><button class="lnk" style="text-decoration:underline;text-underline-offset:3px" id="sizeGuide">View size guide</button></div>
+  <div class="sz-grid" id="sizeList" role="group" aria-label="Sizes"></div>
+  <p class="sz-note">Between sizes? Choose the larger one. Sleeves and hems are altered for free in any Rixance store.</p>
+  <div class="sz-foot">
+    <div class="row-t"><span id="szPrice"></span><span class="col">Delivery: 3 – 6 business days</span></div>
+    <button class="btn dark" id="szAdd" disabled>Add to bag</button>
+  </div>
 </aside>
 
 <aside class="sheet right" id="filters" aria-label="Filter and sort" aria-hidden="true">
@@ -590,23 +621,63 @@ function renderProduct(id){
   $("#gal").innerHTML=g.map((f,i)=>`<figure class="${f.cls}"><img src="img/${f.src}.webp" alt="${i?`${x.n}, view ${i+1}`:`${x.n} in ${x.c.toLowerCase()}`}" ${i>1?'loading="lazy"':""} style="${f.zoom?`--o:${f.zoom};${f.z?`--z:${f.z}`:""}`:`object-position:${f.o||"50% 20%"}`}"></figure>`).join("");
   $("#gal").scrollLeft=0; $("#galCount").textContent=`1 / ${g.length}`;
   const sib=P.filter(y=>y.cat===x.cat).slice(0,6);
-  $("#buy").innerHTML=`${x.tag?`<div class="badge">${x.tag}</div>`:""}
-    <h1>${x.n}</h1><p class="mat">${x.m}</p><div class="price">${money(x.p)}</div>
-    <div class="clabel">Colour: <b>${x.c}</b></div>
+  const tailored=["suits","jackets"].includes(x.cat)&&x.s===J;
+  const ex=EXTRA[x.id]||{};
+  const code="RX"+String(P.indexOf(x)+101).padStart(4,"0")+x.c.replace(/[^A-Z]/g,"");
+  $("#buy").innerHTML=`<div class="buy-in">${x.tag?`<div class="badge">${x.tag}</div>`:""}
+    <div class="t-row"><h1>${x.n}</h1><span class="price">${money(x.p)}</span></div>
+    <p class="mat">${x.c} · ${x.m.split(" · ")[1]}</p>
     <div class="thumbs">${sib.map(y=>`<a href="#p-${y.id}" aria-current="${y.id===x.id}" title="${y.n}, ${y.c}"><img src="img/${y.img}.webp" alt="${y.n}, ${y.c}" loading="lazy"></a>`).join("")}</div>
-    <div class="ctas" id="mainCtas"><button class="btn line" data-custom>Customize</button><button class="btn dark" data-size-open>Select size</button></div>
-    <div class="ship"><svg class="i" viewBox="0 0 24 24"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17.5" cy="17.5" r="1.8"/></svg>Free delivery in 3 – 6 business days</div>
-    <details class="acc"><summary>Size &amp; Fit</summary><div class="ab"><dl><dt>Fit</dt><dd>${x.fit}</dd><dt>Model</dt><dd>187 cm, wears ${x.s[2]||x.s[0]}</dd><dt>Sizes</dt><dd>${x.s.join(", ")}</dd></dl></div></details>
-    <details class="acc"><summary>Details &amp; Care</summary><div class="ab"><dl><dt>Construction</dt><dd>${x.canvas}</dd><dt>Cloth</dt><dd>${x.m.split(" · ").slice(1).join(" · ")}</dd><dt>Care</dt><dd>Dry clean only. Brush and air between wears.</dd></dl></div></details>
-    <details class="acc"><summary>Delivery &amp; Returns</summary><div class="ab">Free delivery on every order. Returns are free within 30 days, unworn and unaltered, by mail or in any Rixance store.</div></details>
-    <div class="pdesc"><p>${x.d}</p><p><b>${x.canvas}</b>${x.canvas==="Half canvas"?"A floating canvas through the chest that moulds to you over time for a natural shape.":"Built light, with minimal interlining, so it moves with you."}</p><p><b>The cloth</b>${x.cloth}</p></div>`;
+    <div class="ctas ${tailored?"two":""}" id="mainCtas">${tailored?'<button class="btn line" data-custom>Customize</button>':""}<button class="btn dark" data-size-open>Select size</button></div>
+    <div class="ship"><svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Free delivery in 3 – 6 business days</div>
+    <details class="acc"><summary>Size &amp; Fit${PLUS}</summary><div class="ab">
+      <button class="lnk" data-guide>View size guide</button>
+      <div><h3>${ex.type||x.n}</h3><ul>${[x.fit,...(ex.f||[])].map(f=>`<li>${f}</li>`).join("")}</ul></div>
+      <p>Model is 187 cm and wears size ${x.s[2]||x.s[0]}.</p></div></details>
+    <details class="acc"><summary>Details &amp; Care${PLUS}</summary><div class="ab">
+      <p>${x.d} ${x.cloth}</p>
+      <dl><dt>Product code</dt><dd>${code}</dd><dt>Colour</dt><dd>${x.c}</dd><dt>Composition</dt><dd>${ex.comp||"100% Wool"}</dd><dt>Construction</dt><dd>${x.canvas}</dd><dt>Care</dt><dd>${x.cat==="shoes"?"Brush with a suede brush":"Dry clean only"}</dd></dl></div></details>
+    <details class="acc"><summary>Delivery &amp; Returns${PLUS}</summary><div class="ab">
+      <div class="dr"><svg viewBox="0 0 24 24"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17.5" cy="17.5" r="1.8"/></svg><p><span class="lnk">Free delivery</span> and free returns</p></div>
+      <div class="dr"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 3-6.2M4 4v4h4"/></svg><p>Return within 30 days, see our <span class="lnk">return policy</span></p></div>
+      <div class="dr"><svg viewBox="0 0 24 24"><path d="M4 9h16l-1.5 11h-13zM8 9V7a4 4 0 0 1 8 0v2"/></svg><p>Free alterations in every Rixance store</p></div></div></details>
+  </div>`;
   const rel=P.filter(y=>y.id!==x.id&&y.cat===x.cat).concat(P.filter(y=>y.cat!==x.cat)).slice(0,10);
   $("#pdpRail").innerHTML=rel.map(railCard).join("");
   $("#pdpRail").scrollLeft=0;
   document.title=`${x.n} in ${x.c} | Rixance`;
 }
 $("#gal").addEventListener("scroll",()=>{ const g=$("#gal"); if(g.scrollWidth<=g.clientWidth+2) return; $("#galCount").textContent=`${Math.round(g.scrollLeft/g.clientWidth)+1} / ${g.children.length}`; },{passive:true});
-function openSizes(x){ $("#sizeFor").textContent=`${x.n} · ${x.c}`; $("#sizeList").innerHTML=x.s.map((s,i)=>`<button data-add="${x.id}" data-size="${s}"><span>${s}</span>${i===x.s.length-1?'<span class="low">Only 2 left</span>':""}</button>`).join(""); open($("#sizes")); }
+let szSel=null;
+function openSizes(x){
+  szSel=null; $("#sizeFor").textContent=x.n; $("#szPrice").textContent=money(x.p); $("#szAdd").disabled=true; $("#szAdd").textContent="Add to bag";
+  $("#sizeList").innerHTML=x.s.map((s,i)=>`<button aria-pressed="false" data-pick="${s}">${s}${i===x.s.length-1?"<small>Only 2 left</small>":""}</button>`).join("");
+  open($("#sizes"));
+}
+$("#sizeList").addEventListener("click",e=>{ const b=e.target.closest("[data-pick]"); if(!b) return; szSel=b.dataset.pick; $$("#sizeList button").forEach(k=>k.setAttribute("aria-pressed",k===b)); $("#szAdd").disabled=false; $("#szAdd").textContent=`Add to bag · ${szSel}`; });
+$("#szAdd").addEventListener("click",()=>{ if(!szSel||!curP) return; bag.push({...curP,size:szSel}); renderBag(); open($("#bag")); });
+document.addEventListener("click",e=>{ if(e.target.closest("[data-guide]")||e.target.id==="sizeGuide") toast("Size guide: jackets in chest inches (R = regular length), pants in waist inches"); });
+const PLUS='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
+const EXTRA={
+  "olive-double-breasted-suit":{type:"Double-Breasted Suit",comp:"55% Wool, 45% Linen",f:["Peak lapels","Six-on-two button stance","Pleated trousers with side adjusters"]},
+  "tailored-black-suit":{type:"Two-Button Suit",comp:"100% Wool",f:["Notch lapels","Natural shoulders","Flat-front trousers with belt loops"]},
+  "herringbone-wool-jacket":{type:"Sport Jacket",comp:"90% Wool, 10% Cashmere",f:["Soft shoulders","Patch pockets","Leather hanging loop"]},
+  "houndstooth-wool-jacket":{type:"Sport Jacket",comp:"70% Wool, 30% Alpaca",f:["Unstructured shoulders","Three patch pockets","Single vent"]},
+  "soft-wool-blazer":{type:"Blazer",comp:"100% Wool",f:["Unlined","Horn buttons","Double vents"]},
+  "ivory-double-breasted-jacket":{type:"Double-Breasted Jacket",comp:"80% Wool, 20% Silk",f:["Peak lapels","Mother-of-pearl buttons","Double vents"]},
+  "raw-silk-shirt-jacket":{type:"Shirt Jacket",comp:"100% Silk",f:["Camp collar","Long, straight body","Horn buttons"]},
+  "camel-overcoat":{type:"Overcoat",comp:"100% Camel Hair",f:["Peak lapels","Jetted flap pockets","Knee length"]},
+  "suede-overshirt":{type:"Overshirt",comp:"100% Goat Suede",f:["Two chest pockets","Horn buttons","Curved hem"]},
+  "suede-shearling-collar-jacket":{type:"Suede Jacket",comp:"100% Lamb Suede, Shearling Collar",f:["Removable shearling collar","Two-way zip","Quilted lining"]},
+  "suede-bomber":{type:"Bomber",comp:"100% Goat Suede",f:["Concealed zip","Ribbed cuffs and hem","Cupro lining"]},
+  "cashmere-overshirt":{type:"Overshirt",comp:"100% Cashmere",f:["Button front","Two chest pockets","Soft, unlined"]},
+  "field-jacket":{type:"Field Jacket",comp:"100% Wool",f:["Four pockets","Hidden placket","Stand collar"]},
+  "wool-zip-jacket":{type:"Zip Jacket",comp:"100% Wool",f:["Stand collar","Two-way zip","Side seam pockets"]},
+  "jacquard-shawl-cardigan":{type:"Shawl Cardigan",comp:"70% Wool, 30% Mohair",f:["Shawl collar","Horn buttons","Ribbed hem and cuffs"]},
+  "pleated-flannel-pants":{type:"Pleated Pants",comp:"100% Wool",f:["Single pleat","Side adjusters","Wide leg"]},
+  "five-pocket-cotton-pants":{type:"Five-Pocket Pants",comp:"98% Cotton, 2% Elastane",f:["Mid rise","Straight leg","Garment dyed"]},
+  "suede-city-moccasin":{type:"Moccasin",comp:"100% Calf Suede",f:["Hand-stitched apron toe","Slim rubber sole","Made in Portugal"]}
+};
 document.addEventListener("click",e=>{
   if(e.target.closest("[data-size-open]")&&curP) openSizes(curP);
   if(e.target.closest("[data-custom]")) toast("Custom Made is not connected in this demo");
@@ -661,7 +732,7 @@ $("#bagBtn").onclick=()=>open($("#bag"));
 scrim.onclick=()=>closeAll();
 document.addEventListener("click",e=>{ if(e.target.closest("[data-close]")) closeAll(); });
 document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeAll(); });
-const setHeader=()=>hdr.classList.toggle("is-white", sheetOpen || view!=="home" || scrollY>innerHeight*.75);
+const setHeader=()=>{ const ink=view==="product"&&!sheetOpen&&innerWidth>=1024; hdr.classList.toggle("is-ink",ink); hdr.classList.toggle("is-white",!ink&&(sheetOpen||view!=="home"||scrollY>innerHeight*.75)); };
 
 let tt; function toast(m){ const t=$("#toast"); t.textContent=m; t.classList.add("on"); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove("on"),2400); }
 $("#acctBtn").onclick=()=>toast("Accounts are not connected in this demo");
